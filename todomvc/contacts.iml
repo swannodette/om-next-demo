@@ -18,7 +18,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Leiningen: bidi:1.20.3" level="project" />
     <orderEntry type="library" name="Leiningen: cljs-http:0.1.30" level="project" />
-    <orderEntry type="library" name="Leiningen: cljsjs/codemirror:5.1.0-2" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.3" level="project" />
     <orderEntry type="library" name="Leiningen: com.cognitect/transit-clj:0.8.281" level="project" />
     <orderEntry type="library" name="Leiningen: com.cognitect/transit-cljs:0.8.225" level="project" />
@@ -30,11 +29,11 @@
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.omcljs/om:0.9.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Leiningen: ring:1.4.0" level="project" />
+    <orderEntry type="library" name="Leiningen: secretary:0.4.0" level="project" />
     <orderEntry type="library" name="Leiningen: com.cemerick/url:0.1.1" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:0.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-core:1.3.2" level="project" />
     <orderEntry type="library" name="Leiningen: pathetic:0.5.0" level="project" />
-    <orderEntry type="library" name="Leiningen: com.cemerick/clojurescript.test:0.0.4" level="project" />
     <orderEntry type="library" name="Leiningen: clj-time:0.6.0" level="project" />
     <orderEntry type="library" name="Leiningen: commons-fileupload:1.3" level="project" />
     <orderEntry type="library" name="Leiningen: commons-io:2.4" level="project" />
@@ -158,5 +157,7 @@
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty/jetty-http:9.2.10.v20150310" level="project" />
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty/jetty-io:9.2.10.v20150310" level="project" />
     <orderEntry type="library" name="Leiningen: org.eclipse.jetty/jetty-util:9.2.10.v20150310" level="project" />
+    <orderEntry type="library" name="Leiningen: com.cemerick/clojurescript.test:0.0.4" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:0.0-1896" level="project" />
   </component>
 </module>

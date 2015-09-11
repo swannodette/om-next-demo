@@ -7,7 +7,7 @@
   :jvm-opts ^:replace ["-Xms512m" "-Xmx512m" "-server"]
 
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.122"]
+                 [org.clojure/clojurescript "1.7.122" :classifier "aot"]
                  [com.datomic/datomic-free "0.9.5206"]
                  [bidi "1.20.3"]
                  [org.omcljs/om "0.9.0-SNAPSHOT"]
@@ -17,9 +17,9 @@
                  [cljs-http "0.1.30" :exclusions
                   [org.clojure/clojure org.clojure/clojurescript
                    com.cognitect/transit-cljs]]
-                 [cljsjs/codemirror "5.1.0-2"]
                  [com.stuartsierra/component "0.2.3"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 [secretary "0.4.0"]]
 
   :source-paths ["src/clj"]
 
