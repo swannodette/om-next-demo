@@ -4,12 +4,13 @@
 
 (def shared-opts
   {:asset-path "/js"
-   :output-dir "resources/public/js"})
+   :output-dir "resources/public/js"
+   :verbose true})
 
 (b/build (b/inputs "src/dev")
   (merge
     {:main 'todomvc.dev
-     :output-to "resources/public/js/demo.js"}
+     :output-to "resources/public/js/app.js"}
     shared-opts))
 
-(repl/repl* (browser/repl-env :host-port 8081) shared-opts)
+(repl/repl* (browser/repl-env :host-port 8082) shared-opts)
