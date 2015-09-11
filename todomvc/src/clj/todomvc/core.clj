@@ -9,7 +9,7 @@
 
 (defn dev-start []
   (let [sys  (system/dev-system
-               {:db-uri   "datomic:mem://localhost:4334/todomvc"
+               {:db-uri   "datomic:mem://localhost:4334/todos"
                 :web-port 8081})
         sys' (component/start sys)]
     (reset! servlet-system sys')
@@ -23,7 +23,7 @@
 
 (defn start []
   (let [s (system/prod-system
-            {:db-uri   "datomic:mem://localhost:4334/todomvc"})]
+            {:db-uri   "datomic:mem://localhost:4334/todos"})]
     (let [started-system (component/start s)]
       (reset! servlet-system started-system))))
 

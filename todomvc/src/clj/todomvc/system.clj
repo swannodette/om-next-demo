@@ -22,8 +22,12 @@
         {:datomic-connection  :db}))))
 
 (comment
-  (def s (dev-system {:db-uri   "datomic:mem://localhost:4334/todomvc"
-                      :web-port 8081}))
+  (def s
+    (dev-system
+      {:db-uri   "datomic:mem://localhost:4334/todos"
+       :web-port 8081}))
+
+  (todomvc.datomic/new-database "datomic:mem://localhost:4334/todoms")
 
   (def s1 (component/start s))
 
@@ -32,9 +36,8 @@
   (def conn (-> s1 :db :connection))
   (def db (d/db conn))
 
-  (todomvc/todomvc db
-    [:db/id :person/first-name :person/last-name
-     {:person/telephone [:telephone/number]}])
+  (todomvc/todos db
+    [:todo/created :todo/title])
 
   (d/q '[:find (pull ?p sel)
          :in $ ?street sel
