@@ -1,2 +1,3 @@
-todomvc/.idea/*
+.idea
+todomvc/target
 todomvc/resources/public/js
