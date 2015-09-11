@@ -1,5 +1,5 @@
 (ns contacts.dev
-  (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [contacts.demo1]
-            [contacts.demo2]))
+  (:require [todomvc.core :as todomvc]
+            [clojure.browser.repl :as repl]))
 
+(defonce conn (repl/connect "http://localhost:9000/repl"))
