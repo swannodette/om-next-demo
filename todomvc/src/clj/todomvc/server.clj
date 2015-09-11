@@ -1,16 +1,16 @@
 (ns todomvc.server
   (:require [clojure.java.io :as io]
-            [contacts.util :as util]
+            [todomvc.util :as util]
             [ring.util.response :refer [response file-response resource-response]]
             [ring.adapter.jetty :refer [run-jetty]]
-            [contacts.middleware
+            [todomvc.middleware
              :refer [wrap-transit-body wrap-transit-response
                      wrap-transit-params]]
             [ring.middleware.resource :refer [wrap-resource]]
             [bidi.bidi :refer [make-handler] :as bidi]
             [com.stuartsierra.component :as component]
             [datomic.api :as d]
-            [contacts.datomic]))
+            [todomvc.datomic]))
 
 ;; =============================================================================
 ;; Routes
@@ -42,17 +42,17 @@
 
 ;; CONTACT HANDLERS
 
-(defn contacts [conn selector]
-  (contacts.datomic/contacts (d/db conn) selector))
+(defn todomvc [conn selector]
+  (todomvc.datomic/todomvc (d/db conn) selector))
 
 (defn contact-get [conn id]
-  (contacts.datomic/get-contact (d/db conn) id))
+  (todomvc.datomic/get-contact (d/db conn) id))
 
 (defmulti -fetch (fn [_ k _] k))
 
-(defmethod -fetch :app/contacts
+(defmethod -fetch :app/todomvc
   [conn _ selector]
-  (contacts conn selector))
+  (todomvc conn selector))
 
 (defn fetch
   ([conn k] (fetch conn k '[*]))
@@ -96,15 +96,15 @@
 (defn wrap-connection [handler conn]
   (fn [req] (handler (assoc req :datomic-connection conn))))
 
-(defn contacts-handler [conn]
+(defn todomvc-handler [conn]
   (wrap-resource
     (wrap-transit-response
       (wrap-transit-params (wrap-connection handler conn)))
     "public"))
 
-(defn contacts-handler-dev [conn]
+(defn todomvc-handler-dev [conn]
   (fn [req]
-    ((contacts-handler conn) req)))
+    ((todomvc-handler conn) req)))
 
 ;; =============================================================================
 ;; WebServer
@@ -122,28 +122,28 @@
   (stop [component]
     (.stop container)))
 
-(defn dev-server [web-port] (WebServer. web-port contacts-handler-dev true nil))
+(defn dev-server [web-port] (WebServer. web-port todomvc-handler-dev true nil))
 
-(defn prod-server [] (WebServer. nil contacts-handler false nil))
+(defn prod-server [] (WebServer. nil todomvc-handler false nil))
 
 ;; =============================================================================
 ;; Route Testing
 
 (comment
-  (require '[contacts.core :as cc])
+  (require '[todomvc.core :as cc])
   (cc/dev-start)
 
   ;; get contact
   (handler {:uri "/query"
             :request-method :post
-            :transit-params [{:app/contacts [:person/first-name :person/last-name
+            :transit-params [{:app/todomvc [:person/first-name :person/last-name
                                              {:person/telephone '[*]}]}]
             :datomic-connection (:connection (:db @cc/servlet-system))})
 
   (.basisT (d/db (:connection (:db @cc/servlet-system))))
 
   ;; create contact
-  (handler {:uri "/contacts"
+  (handler {:uri "/todomvc"
             :request-method :post
             :transit-params {:person/first-name "Bib" :person/last-name "Bibooo"}
             :datomic-connection (:connection (:db @cc/servlet-system))})

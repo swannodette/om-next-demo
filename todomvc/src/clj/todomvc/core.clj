@@ -1,6 +1,6 @@
 (ns todomvc.core
   (:require [com.stuartsierra.component :as component]
-            [contacts.system :as system]))
+            [todomvc.system :as system]))
 
 (def servlet-system (atom nil))
 

@@ -13,7 +13,7 @@
                  [org.omcljs/om "0.9.0-SNAPSHOT"]
                  [ring/ring "1.4.0"]
                  [com.cognitect/transit-clj "0.8.281"]
-                 [com.cognitect/transit-cljs "0.8.255"]
+                 [com.cognitect/transit-cljs "0.8.225"]
                  [cljs-http "0.1.30" :exclusions
                   [org.clojure/clojure org.clojure/clojurescript
                    com.cognitect/transit-cljs]]
