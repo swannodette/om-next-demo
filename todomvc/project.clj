@@ -19,31 +19,14 @@
                    com.cognitect/transit-cljs]]
                  [com.stuartsierra/component "0.2.3"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [secretary "0.4.0"]]
+                 [secretary "0.4.0" :exclusions [org.clojure/clojurescript]]]
 
   :source-paths ["src/clj"]
 
-  :plugins [[lein-cljsbuild "1.1.0"]
-            [lein-ring "0.8.10"]
+  :plugins [[lein-ring "0.8.10"]
             [lein-beanstalk "0.2.7"]]
 
   :ring {:handler contacts.core/service
          :init    contacts.core/start
          :destroy contacts.core/stop}
-
-  :cljsbuild {
-    :builds [
-      {:id "dev"
-       :source-paths ["src/cljs"]
-       :compiler {
-         :output-to     "resources/public/js/main.js"
-         :output-dir    "resources/public/js/out"
-         :optimizations :none
-         :source-map    true}}
-      {:id "release"
-       :source-paths ["src/cljs"]
-       :compiler {
-         :output-to      "resources/public/js/main.js"
-         :optimizations  :advanced
-         :output-wrapper true
-         :pretty-print   false}}]})
+  )

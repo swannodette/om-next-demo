@@ -7,7 +7,7 @@
    :output-dir "resources/public/js"
    :verbose    true})
 
-(b/build (b/inputs "src/dev")
+(b/build "src/dev"
   (merge
     {:main      'todomvc.dev
      :output-to "resources/public/js/app.js"}
