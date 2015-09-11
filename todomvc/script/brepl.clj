@@ -5,11 +5,11 @@
 (def shared-opts
   {:asset-path "/js"
    :output-dir "resources/public/js"
-   :verbose true})
+   :verbose    true})
 
 (b/build (b/inputs "src/dev")
   (merge
-    {:main 'todomvc.dev
+    {:main      'todomvc.dev
      :output-to "resources/public/js/app.js"}
     shared-opts))
 
