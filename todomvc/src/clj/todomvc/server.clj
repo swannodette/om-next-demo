@@ -33,8 +33,6 @@
    :headers {"Content-Type" "application/transit+json"}
    :body    data})
 
-;; CONTACT HANDLERS
-
 (defn todomvc [conn selector]
   (todomvc.datomic/todomvc (d/db conn) selector))
 

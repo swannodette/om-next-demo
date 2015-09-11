@@ -9,14 +9,14 @@
 ;; =============================================================================
 ;; Queries
 
-(defn contacts
-  ([db] (contacts db '[*]))
+(defn todos
+  ([db] (todos db '[*]))
   ([db selector]
    (mapv first
      (d/q '[:find (pull ?eid selector)
             :in $ selector
             :where
-            [?eid :person/first-name]] ;; talk about how we can make it do first OR last name
+            [?eid :todo/created]] ;; talk about how we can make it do first OR last name
        db selector))))
 
 (defn get-contact
