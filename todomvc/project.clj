@@ -21,7 +21,7 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [secretary "0.4.0" :exclusions [org.clojure/clojurescript]]]
 
-  :source-paths ["src/clj"]
+  :source-paths ["src/clj" "src/cljs" "src/dev"]
 
   :plugins [[lein-ring "0.8.10"]
             [lein-beanstalk "0.2.7"]]
