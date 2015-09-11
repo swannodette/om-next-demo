@@ -2,7 +2,7 @@
  ;; Todos
 
  {:db/id #db/id[:db.part/db]
-  :db/ident :todo/title
+  :db/ident :todo/created
   :db/valueType :db.type/instant
   :db/cardinality :db.cardinality/one
   :db/doc "A todo's creation timestamp"

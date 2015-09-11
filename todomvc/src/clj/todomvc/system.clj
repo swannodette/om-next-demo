@@ -22,28 +22,17 @@
         {:datomic-connection  :db}))))
 
 (comment
-  (def s
+  (def sys
     (dev-system
       {:db-uri   "datomic:mem://localhost:4334/todos"
        :web-port 8081}))
 
-  (todomvc.datomic/new-database "datomic:mem://localhost:4334/todoms")
-
-  (def s1 (component/start s))
+  (def sys' (component/start sys))
 
   (require '[datomic.api :as d])
 
-  (def conn (-> s1 :db :connection))
+  (def conn (-> sys' :db :connection))
   (def db (d/db conn))
 
-  (todomvc/todos db
-    [:todo/created :todo/title])
-
-  (d/q '[:find (pull ?p sel)
-         :in $ ?street sel
-         :where
-         [?a :address/street ?street]
-         [?p :person/address ?a]]
-    db "Maple Street"
-    [:person/first-name :person/last-name])
+  (todomvc/todos db [:todo/created :todo/title :todo/completed])
 )
