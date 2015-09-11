@@ -1,4 +1,4 @@
-(ns contacts.dev
+(ns todomvc.dev
   (:require [todomvc.core :as todomvc]
             [clojure.browser.repl :as repl]))
 
