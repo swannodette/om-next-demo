@@ -7,7 +7,7 @@
              :refer [wrap-transit-body wrap-transit-response
                      wrap-transit-params]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [bidi.bidi :refer [make-handler] :as bidi]
+            [bidi.bidi :as bidi]
             [com.stuartsierra.component :as component]
             [datomic.api :as d]
             [todomvc.datomic]))
@@ -34,7 +34,7 @@
    :body    data})
 
 (defn todomvc [conn selector]
-  (todomvc.datomic/todomvc (d/db conn) selector))
+  (todomvc.datomic/todos (d/db conn) selector))
 
 (defmulti -route (fn [_ k _] k))
 
