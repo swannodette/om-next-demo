@@ -1,0 +1,18 @@
+[{:db/id #db/id[:db.part/user]
+  :person/first-name "Bob"
+  :person/last-name "Smith"
+  :person/email [{:email/address "bob.smith@foo.com"}]
+  :person/telephone [{:telephone/number "111-111-1111"}]
+  :person/address [{:address/street "Maple Street"
+                    :address/city "Boston"
+                    :address/state "Massachusetts"
+                    :address/zipcode "11111"}]}
+ {:db/id #db/id[:db.part/user]
+  :person/first-name "Martha"
+  :person/last-name "Smith"
+  :person/email [{:email/address "martha.smith@bar.com"}]
+  :person/telephone [{:telephone/number "111-111-1112"}]
+  :person/address [{:address/street "Maple Street"
+                    :address/city "Boston"
+                    :address/state "Massachusetts"
+                    :address/zipcode "11111"}]}]

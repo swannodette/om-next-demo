@@ -1,0 +1,88 @@
+[
+ ;; People
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :person/first-name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A person's first name"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :person/last-name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A person's last name"
+  :db.install/_attribute :db.part/db}
+
+ ;; Email address
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :person/email
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/isComponent true
+  :db/doc "A person's email addresses"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :email/address
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "An email addres"
+  :db.install/_attribute :db.part/db}
+
+ ;; Telephone numbers
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :person/telephone
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/isComponent true
+  :db/doc "A person's telephone contact information"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :telephone/number
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A telephone number"
+  :db.install/_attribute :db.part/db}
+
+ ;; Addresses
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :person/address
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/isComponent true
+  :db/doc "A person's physical addresses"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/street
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A street"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/city
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A city"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/state
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A state"
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #db/id[:db.part/db]
+  :db/ident :address/zipcode
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A zipcode"
+  :db.install/_attribute :db.part/db}]
