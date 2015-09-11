@@ -83,3 +83,6 @@
           (footer app active completed))))))
 
 (om/create-factory Todos)
+
+(comment
+  )

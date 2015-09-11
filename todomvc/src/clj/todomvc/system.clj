@@ -31,8 +31,12 @@
 
   (require '[datomic.api :as d])
 
-  (def conn (-> sys' :db :connection))
+  (def conn (d/connect "datomic:mem://localhost:4334/todos"))
+
+  ;;  (def conn (-> sys' :db :connection))
+
   (def db (d/db conn))
 
-  (todomvc/todos db [:todo/created :todo/title :todo/completed])
+  (todomvc/todos db
+    [:db/id :todo/created :todo/title :todo/completed])
 )
