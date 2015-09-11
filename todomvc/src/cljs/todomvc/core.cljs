@@ -64,3 +64,22 @@
           (dom/a #js {:href "#/completed" :className (sel :completed)}
             "Completed")))
       (clear-button completed))))
+
+(defui Todos
+  Object
+  (render [this]
+    (let [{:keys [todos] :as app} {:todos [] :showing :all :editing nil}
+          active (count (remove :completed todos))
+          completed (- (count todos) active)]
+      (dom/div nil
+        (dom/header #js {:id "header"}
+          (dom/h1 nil "todos")
+          (dom/input
+            #js {:ref "newField"
+                 :id "new-todo"
+                 :placeholder "What needs to be done?"
+                 :onKeyDown #(do %)})
+          (main app)
+          (footer app active completed))))))
+
+(om/create-factory Todos)
