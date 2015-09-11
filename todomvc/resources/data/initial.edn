@@ -1,18 +1,8 @@
 [{:db/id #db/id[:db.part/user]
-  :person/first-name "Bob"
-  :person/last-name "Smith"
-  :person/email [{:email/address "bob.smith@foo.com"}]
-  :person/telephone [{:telephone/number "111-111-1111"}]
-  :person/address [{:address/street "Maple Street"
-                    :address/city "Boston"
-                    :address/state "Massachusetts"
-                    :address/zipcode "11111"}]}
+  :todo/created #inst "2015-09-11T19:44:06.059-00:00"
+  :todo/title "Get milk"
+  :todo/completed false}
  {:db/id #db/id[:db.part/user]
-  :person/first-name "Martha"
-  :person/last-name "Smith"
-  :person/email [{:email/address "martha.smith@bar.com"}]
-  :person/telephone [{:telephone/number "111-111-1112"}]
-  :person/address [{:address/street "Maple Street"
-                    :address/city "Boston"
-                    :address/state "Massachusetts"
-                    :address/zipcode "11111"}]}]
+  :todo/created #inst "2015-09-11T19:44:47.307-00:00"
+  :todo/title "Walk dog"
+  :todo/completed false}]
