@@ -21,11 +21,22 @@
         {:get  {[""] :api}
          :post {[""] :api}}}])
 
-;(def ops
-;  {:todo-app      todo-app-ops
-;   :todos/list    todo-item-ops
-;   :todo/item     todo-item-ops
-;   :todo/category category-ops})
+(def todo-app-ops
+  '#{todo/create
+     todo/delete})
+
+(def todo-item-ops
+  '#{todo/change-title
+     todo/complete})
+
+(def key->ops
+  {:todos/app  todo-app-ops
+   :todos/list todo-item-ops
+   :todo/item  todo-item-ops})
+
+(def ops->change
+  '{todo/create #{:todos/count}
+    todo/delete #{:todos/count}})
 
 ;; =============================================================================
 ;; Handlers
@@ -53,21 +64,33 @@
   ([conn k selector]
     (-route conn k selector)))
 
-(defn router [conn query]
-  (letfn [(step [ret k]
-            (cond
-              (map? k)
-              (let [[k v] (first k)]
-                (assoc ret k (route conn k v)))
+(defn add-ops [ret k ops]
+  (if (vector? ret)
+    (into [] (map #(add-ops % k ops)) ret)
+    (if-let [[_ ret-ops] (find ops k)]
+      (merge ops ret-ops)
+      ops)))
 
-              (keyword? k)
-              (assoc ret k (router conn k))
+(defn router
+  ([conn query]
+    (router conn query nil))
+  ([conn query key->ops]
+   (letfn [(step [ret k]
+             (cond
+               (map? k)
+               (let [[k v] (first k)]
+                 (assoc ret
+                   k (add-ops (route conn k v) k key->ops)))
 
-              :else
-              (throw
-                (ex-info (str "Invalid query key " k)
-                  {:type :error/invalid-query-value}))))]
-    (reduce step {} query)))
+               (keyword? k)
+               (assoc ret
+                 k (add-ops (router conn k) k key->ops))
+
+               :else
+               (throw
+                 (ex-info (str "Invalid query key " k)
+                   {:type :error/invalid-query-value}))))]
+     (reduce step {} query))))
 
 (defn api [req]
   (generate-response
