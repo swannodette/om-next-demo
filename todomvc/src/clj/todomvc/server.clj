@@ -21,6 +21,12 @@
         {:get  {[""] :api}
          :post {[""] :api}}}])
 
+;(def ops
+;  {:todo-app      todo-app-ops
+;   :todos/list    todo-item-ops
+;   :todo/item     todo-item-ops
+;   :todo/category category-ops})
+
 ;; =============================================================================
 ;; Handlers
 
@@ -38,7 +44,7 @@
 
 (defmulti -route (fn [_ k _] k))
 
-(defmethod -route :app/todomvc
+(defmethod -route :todo/list
   [conn _ selector]
   (todomvc conn selector))
 
@@ -126,7 +132,7 @@
   (handler
     {:uri "/api"
      :request-method :post
-     :transit-params [{:todos [:todo/completed :todo/title]}]
+     :transit-params [{:todos/list [:db/id :todos/created :todo/title :todo/completed]}]
      :datomic-connection (:connection (:db @cc/servlet-system))})
 
   (.basisT (d/db (:connection (:db @cc/servlet-system))))
@@ -137,5 +143,10 @@
             :transit-params '[(todo/create {:todo/title "New Todo"})]
             :datomic-connection (:connection (:db @cc/servlet-system))})
 
+  ;; run functions first?
+  '[(todo/create {:todos/title "New Todo"}) :todos/count]
+
+  {:todo/count 5
+   'todo/create {:error "Not logged in"}}
   )
 
