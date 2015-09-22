@@ -82,7 +82,7 @@
           (main app)
           (footer app active completed))))))
 
-(om/create-factory Todos)
+(def todos (om/create-factory Todos))
 
 (comment
   )

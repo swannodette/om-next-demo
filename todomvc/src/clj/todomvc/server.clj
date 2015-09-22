@@ -22,12 +22,12 @@
          :post {[""] :api}}}])
 
 (def todo-app-ops
-  '#{todo/create
-     todo/delete})
+  '{todo/create "Create a new todo, :todo/title must be supplied"
+    todo/delete "Delete a todo, :db/id must be supplied"})
 
 (def todo-item-ops
-  '#{todo/change-title
-     todo/complete})
+  '{todo/change-title "Change a todo title, :todo/title must be supplied"
+    todo/change-state "Change a todo state, :todo/completed must be supplied"})
 
 (def key->ops
   {:todos/app  todo-app-ops
