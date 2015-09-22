@@ -1,28 +1,8 @@
 (ns todomvc.datomic
   (:require [datomic.api :as d]
             [com.stuartsierra.component :as component]
-            [clojure.java.io :as io]
-            [clojure.edn :as edn]
-            [cognitect.transit :as t])
+            [clojure.java.io :as io])
   (:import datomic.Util))
-
-;; =============================================================================
-;; Queries
-
-(defn todos
-  ([db] (todos db '[*]))
-  ([db selector]
-   (mapv first
-     (d/q '[:find (pull ?eid selector)
-            :in $ selector
-            :where
-            [?eid :todo/created]] ;; talk about how we can make it do first OR last name
-       db selector))))
-
-(defn get-contact
-  ([db id] (get-contact db id '[*]))
-  ([db id selector]
-   (d/pull db selector id)))
 
 ;; =============================================================================
 ;; Component
@@ -43,9 +23,3 @@
     (first (Util/readAll (io/reader (io/resource "data/schema.edn"))))
     (first (Util/readAll (io/reader (io/resource "data/initial.edn"))))
     nil))
-
-(comment
-
-  )
-
-

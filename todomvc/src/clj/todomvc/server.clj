@@ -10,7 +10,8 @@
             [bidi.bidi :as bidi]
             [com.stuartsierra.component :as component]
             [datomic.api :as d]
-            [todomvc.datomic]))
+            [todomvc.datomic]
+            [todomvc.parser :as parser]))
 
 ;; =============================================================================
 ;; Routes
@@ -20,23 +21,6 @@
        "/api"
         {:get  {[""] :api}
          :post {[""] :api}}}])
-
-(def todo-app-ops
-  '{todo/create "Create a new todo, :todo/title must be supplied"
-    todo/delete "Delete a todo, :db/id must be supplied"})
-
-(def todo-item-ops
-  '{todo/change-title "Change a todo title, :todo/title must be supplied"
-    todo/change-state "Change a todo state, :todo/completed must be supplied"})
-
-(def key->ops
-  {:todos/app  todo-app-ops
-   :todos/list todo-item-ops
-   :todo/item  todo-item-ops})
-
-(def ops->change
-  '{todo/create #{:todos/count}
-    todo/delete #{:todos/count}})
 
 ;; =============================================================================
 ;; Handlers
@@ -50,51 +34,9 @@
    :headers {"Content-Type" "application/transit+json"}
    :body    data})
 
-(defn todomvc [conn selector]
-  (todomvc.datomic/todos (d/db conn) selector))
-
-(defmulti -route (fn [_ k _] k))
-
-(defmethod -route :todo/list
-  [conn _ selector]
-  (todomvc conn selector))
-
-(defn route
-  ([conn k] (route conn k '[*]))
-  ([conn k selector]
-    (-route conn k selector)))
-
-(defn add-ops [ret k ops]
-  (if (vector? ret)
-    (into [] (map #(add-ops % k ops)) ret)
-    (if-let [[_ ret-ops] (find ops k)]
-      (merge ops ret-ops)
-      ops)))
-
-(defn router
-  ([conn query]
-    (router conn query nil))
-  ([conn query key->ops]
-   (letfn [(step [ret k]
-             (cond
-               (map? k)
-               (let [[k v] (first k)]
-                 (assoc ret
-                   k (add-ops (route conn k v) k key->ops)))
-
-               (keyword? k)
-               (assoc ret
-                 k (add-ops (router conn k) k key->ops))
-
-               :else
-               (throw
-                 (ex-info (str "Invalid query key " k)
-                   {:type :error/invalid-query-value}))))]
-     (reduce step {} query))))
-
 (defn api [req]
   (generate-response
-    (router (:datomic-connection req) (:transit-params req))))
+    (parser {:conn (:datomic-connection req)} (:transit-params req))))
 
 ;;;; PRIMARY HANDLER
 
