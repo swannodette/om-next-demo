@@ -4,6 +4,7 @@
   (:require [goog.events :as events]
             [secretary.core :as secretary]
             [cljs.core.async :refer [put! <! chan]]
+            [todomvc.parser :as parser]
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [clojure.string :as string]
@@ -33,10 +34,10 @@
 (defn main [{:keys [todos showing editing] :as app}]
   (dom/section #js {:id "main" :style (hidden (empty? todos))}
     (dom/input
-      #js {:id "toggle-all"
-           :type "checkbox"
+      #js {:id       "toggle-all"
+           :type     "checkbox"
            :onChange #(toggle-all % app)
-           :checked (every? :completed todos)})
+           :checked  (every? :completed todos)})
     (apply dom/ul #js {:id "todo-list"} todos)))
 
 (defn clear-button [completed]
@@ -47,25 +48,24 @@
       (str "Clear completed (" completed ")"))))
 
 (defn footer [app count completed]
-  (let [sel (-> (zipmap [:all :active :completed] (repeat ""))
-              (assoc (:showing app) "selected"))]
-    (dom/footer #js {:id "footer" :style (hidden (empty? (:todos app)))}
-      (dom/span #js {:id "todo-count"}
-        (dom/strong nil count)
-        (str " " (pluralize count "item") " left"))
-      (dom/ul #js {:id "filters"}
-        (dom/li nil
-          (dom/a #js {:href "#/" :className (sel :all)}
-            "All"))
-        (dom/li nil
-          (dom/a #js {:href "#/active" :className (sel :active)}
-            "Active"))
-        (dom/li nil
-          (dom/a #js {:href "#/completed" :className (sel :completed)}
-            "Completed")))
-      (clear-button completed))))
+  (dom/footer #js {:id "footer" :style (hidden (empty? (:todos/list app)))}
+    (dom/span #js {:id "todo-count"}
+      (dom/strong nil count)
+      (str " " (pluralize count "item") " left"))
+    (apply dom/ul #js {:id "filters" :className (name (:showing app))}
+      (map (fn [[x y]] (dom/li nil (dom/a #js {:href (str "#/" x)} y)))
+        [["" "All"] ["active" "Active"] ["completed" "Completed"]]))
+    (clear-button completed)))
 
 (defui Todos
+  static om/IQueryParams
+  (params [this]
+    {:todo-item (om/get-query item/TodoItem)})
+
+  static om/IQuery
+  (query [this]
+    '[{:todo/list ?todo-item}])
+
   Object
   (render [this]
     (let [{:keys [todos] :as app} {:todos [] :showing :all :editing nil}
@@ -83,6 +83,12 @@
           (footer app active completed))))))
 
 (def todos (om/create-factory Todos))
+
+(def reconciler
+  (om/reconciler
+    {:state   (atom {})
+     :parser  (om/parser {:read parser/read
+                          :mutate parser/mutate})}))
 
 (comment
   )
