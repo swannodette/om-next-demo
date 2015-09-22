@@ -18,19 +18,19 @@
                [?eid :todo/created]]
              (= :completed filter) (conj '[?eid :todo/completed true])
              (= :active filter)    (conj '[?eid :todo/completed false]))]
-     (d/q db selector))))
+     (d/q q db selector))))
 
 (defmethod readf :todos/list
   [{:keys [conn selector]} _ _]
   {:value (todos (d/db conn) selector)})
 
 (defmethod mutatef 'todos/create
-  [{:keys [conn]} k params]
+  [{:keys [conn]} k {:keys [:todo/title]}]
   (d/transact conn
-    (merge
-      (select-keys params [:todos/title])
-      {:todo/completed false
-       :todo/created (java.util.Date.)}))
+    [{:db/id          #db/id[:db.part/user]
+      :todo/title     title
+      :todo/completed false
+      :todo/created   (java.util.Date.)}])
   {:value [:todos/list]})
 
 (defmethod mutatef 'todos/set-state
@@ -55,7 +55,9 @@
 
   (require '[om.next.server :refer [parser]])
 
-  (def p (parser {:read readf}))
+  (def p (parser {:read readf :mutate mutatef}))
 
   (p {:conn conn} [{:todos/list [:db/id :todo/title]}])
+
+  (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
   )
