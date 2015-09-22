@@ -51,6 +51,8 @@
 (comment
   (require '[todomvc.core :as cc])
 
+  (cc/dev-start)
+
   (def conn (:connection (:db @cc/servlet-system)))
 
   (require '[om.next.server :refer [parser]])
@@ -60,4 +62,13 @@
   (p {:conn conn} [{:todos/list [:db/id :todo/title]}])
 
   (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
+
+  (p {:conn conn} '[(todos/delete {:db/id 17592186045418})])
+
+  ;; this fails
+  (d/transact conn
+    [{:db/id          #db/id[:db.part/user]
+      :todo/title     nil
+      :todo/completed false
+      :todo/created   (java.util.Date.)}])
   )
