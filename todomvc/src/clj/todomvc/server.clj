@@ -107,7 +107,7 @@
   ;; create todo
   (handler {:uri "/api"
             :request-method :post
-            :transit-params '[(todo/create {:todo/title "New Todo"})]
+            :transit-params '[(todos/create {:todo/title "Toilet paper"})]
             :datomic-connection (:connection (:db @cc/servlet-system))})
 
   ;; run functions first?
