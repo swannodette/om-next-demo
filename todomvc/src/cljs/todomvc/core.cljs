@@ -82,4 +82,5 @@
                           :mutate parser/mutate})}))
 
 (comment
+  (om/get-query Todos)
   )

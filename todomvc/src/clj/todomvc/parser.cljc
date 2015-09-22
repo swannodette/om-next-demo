@@ -1,5 +1,6 @@
 (ns todomvc.parser
-  (:require [om.next.parser]))
+  (:require [#?(:clj om.next.server :cljs om.next)
+             :refer [parser]]))
 
 (defmulti read (fn [_ k _] k))
 
