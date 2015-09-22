@@ -11,6 +11,7 @@
             [com.stuartsierra.component :as component]
             [datomic.api :as d]
             [todomvc.datomic]
+            [om.next.server :as om]
             [todomvc.parser :as parser]))
 
 ;; =============================================================================
@@ -36,7 +37,8 @@
 
 (defn api [req]
   (generate-response
-    (parser {:conn (:datomic-connection req)} (:transit-params req))))
+    ((om/parser {:read parser/readf :mutate parser/mutatef})
+      {:conn (:datomic-connection req)} (:transit-params req))))
 
 ;;;; PRIMARY HANDLER
 
