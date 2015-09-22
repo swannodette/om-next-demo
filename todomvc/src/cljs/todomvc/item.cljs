@@ -1,7 +1,8 @@
 (ns todomvc.item
   (:require [clojure.string :as string]
-            [om.next :as om]
-            [om.dom :as dom]))
+            [om.next :as om :refer-macros [defui]]
+            [om.dom :as dom]
+            [todomvc.util :refer [hidden pluralize]]))
 
 (def ESCAPE_KEY 27)
 (def ENTER_KEY 13)
@@ -43,8 +44,8 @@
   Object
   (componentDidUpdate [this next-props next-state]
     (when (and (:editing next-props)
-               (om/get-state owner :needs-focus))
-      (let [node (om/dom-node owner "editField")
+               (om/get-state this :needs-focus))
+      (let [node (om/dom-node this "editField")
             len  (.. node -value -length)]
         (.focus node)
         (.setSelectionRange node len len))

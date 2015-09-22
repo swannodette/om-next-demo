@@ -8,22 +8,13 @@
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [clojure.string :as string]
+            [todomvc.util :refer [hidden pluralize]]
             [todomvc.item :as item])
   (:import [goog History]
            [goog.history EventType]))
 
 ;; -----------------------------------------------------------------------------
 ;; Utilities
-
-(defn hidden [is-hidden]
-  (if is-hidden
-    #js {:display "none"}
-    #js {}))
-
-(defn pluralize [n word]
-  (if (== n 1)
-    word
-    (str word "s")))
 
 (defn toggle-all [e c]
   )
