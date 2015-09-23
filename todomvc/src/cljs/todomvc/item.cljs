@@ -75,7 +75,7 @@
           #js {:ref       "editField"
                :className "edit"
                :value     (om/get-state this :edit-text)
-               :onBlur    #(submit this)
+               :onBlur    #(submit this props)
                :onChange  #(change this %)
                :onKeyDown #(change this %)})))))
 
