@@ -1,5 +1,6 @@
 (ns todomvc.util
-  (:require [cljs.core.async :refer [chan]]
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [cljs.core.async :refer [chan put!]]
             [cognitect.transit :as t])
   (:import [goog.net XhrIo]))
 
@@ -13,11 +14,24 @@
     word
     (str word "s")))
 
-(defn transit-post [url edn]
+(defn transit-post [url]
+  (fn [edn cb]
+    (.send XhrIo url
+      (fn [e]
+        (this-as this
+          (cb (t/read (t/reader :json) (.getResponseText this)))))
+      "POST" (t/write (t/writer :json) edn)
+      #js {"Content-Type" "application/transit+json"})))
+
+(defn transit-post-chan [url edn]
   (let [c (chan)]
-    (.send XhrIo url "POST"
-      (fn [cb res]
-        (put! c (t/read (t/reader :json) res)))
-      (t/write (t/writer :json) edn)
-      #js {"Content-Type" "application/transit+json"})
+    ((transit-post url) edn (fn [res] (put! c res)))
     c))
+
+(comment
+  (def sel [{:todos/list [:db/id :todo/title :todo/completed :todo/created]}])
+
+  (t/write (t/writer :json) sel)
+
+  (go (println (<! (transit-post-chan "/api" sel))))
+  )

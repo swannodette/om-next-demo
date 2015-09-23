@@ -4,7 +4,6 @@
   (:require [goog.events :as events]
             [secretary.core :as secretary]
             [cljs.core.async :refer [put! <! chan]]
-            [todomvc.parser :as parser]
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [clojure.string :as string]
@@ -78,8 +77,9 @@
 (def reconciler
   (om/reconciler
     {:state   (atom {})
-     :parser  (om/parser {:read parser/read
-                          :mutate parser/mutate})}))
+     :parser  (om/parser
+                {:read parser/read
+                 :mutate parser/mutate})}))
 
 (comment
   (om/get-query Todos)
