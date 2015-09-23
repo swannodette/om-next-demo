@@ -67,7 +67,9 @@
 
   (def p (parser {:read readf :mutate mutatef}))
 
-  (p {:conn conn} [{:todos/list [:db/id :todo/title]}])
+  (p {:conn conn} [{:todos/list [:db/id :todo/title :todo/completed]}])
+
+  (p {:conn conn} '[(todo/set-state {:db/id 17592186045424 :todo/completed true})])
 
   (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
 
