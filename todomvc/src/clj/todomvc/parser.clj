@@ -50,7 +50,7 @@
 
 (defmethod mutatef 'todo/update
   [{:keys [conn]} k {:keys [db/id todo/completed todo/title]}]
-  {:value [id]
+  {:value [{:todos/by-id {:db/id id}}]
    :action
    (fn []
      (d/transact conn
@@ -80,7 +80,9 @@
 
   (p {:conn conn} [{:todos/list [:db/id :todo/title :todo/completed]}])
 
-  (p {:conn conn} '[(todo/update {:db/id 17592186045418 :todo/completed true})])
+  ;; HATEOS style
+  (p {:conn conn}
+    '[(todo/update {:db/id 17592186045418 :todo/completed true})])
 
   (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
 
