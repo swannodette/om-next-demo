@@ -39,7 +39,7 @@
 (defui TodoItem
   static om/IQuery
   (query [this]
-    [:todo/editing :todo/completed :todo/title :todo/hidden])
+    [:db/id :todo/editing :todo/completed :todo/title :todo/hidden])
 
   Object
   (componentDidUpdate [this next-props next-state]
@@ -52,7 +52,7 @@
       (om/update-state! this assoc :needs-focus nil)))
 
   (render [this]
-    (let [{:keys [todo/completed todo/editing todo/title] :as props} (om/props this)
+    (let [{:keys [db/id todo/completed todo/editing todo/title] :as props} (om/props this)
           class (cond-> ""
                   completed (str "completed ")
                   editing   (str "editing"))]
@@ -63,7 +63,8 @@
                  :type      "checkbox"
                  :checked   (and completed "checked")
                  :onChange  (fn [_]
-                              (om/call this 'todo/toggle))})
+                              (om/call this 'todo/set-state
+                                {:db/id id :todo/completed}))})
           (dom/label
             #js {:onDoubleClick (fn [e] (edit this props))}
             title)
