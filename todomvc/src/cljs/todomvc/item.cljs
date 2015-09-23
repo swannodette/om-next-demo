@@ -36,10 +36,38 @@
 ;; -----------------------------------------------------------------------------
 ;; Todo Item
 
+(defn checkbox [c {:keys [:db/id :todo/completed]}]
+  (dom/input
+    #js {:className "toggle"
+         :type      "checkbox"
+         :checked   (and completed "checked")
+         :onChange  (fn [_]
+                      (om/call c 'todo/update
+                        {:db/id id :todo/completed (not completed)}))}))
+
+(defn label [c {:keys [todo/title] :as props}]
+  (dom/label
+    #js {:onDoubleClick (fn [e] (edit c props))}
+    title))
+
+(defn delete-button [c {:keys [db/id]}]
+  (dom/button
+    #js {:className "destroy"
+         :onClick (fn [_] (om/call c 'todo/delete {:db/id id}))}))
+
+(defn edit-field [c props]
+  (dom/input
+    #js {:ref       "editField"
+         :className "edit"
+         :value     (om/get-state c :edit-text)
+         :onBlur    #(submit c props)
+         :onChange  #(change c %)
+         :onKeyDown #(change c %)}))
+
 (defui TodoItem
   static om/IQuery
   (query [this]
-    [:db/id :todo/editing :todo/completed :todo/title :todo/hidden])
+    [:db/id :todo/editing :todo/completed :todo/title])
 
   Object
   (componentDidUpdate [this next-props next-state]
@@ -52,31 +80,16 @@
       (om/update-state! this assoc :needs-focus nil)))
 
   (render [this]
-    (let [{:keys [db/id todo/completed todo/editing todo/title] :as props} (om/props this)
+    (let [props (om/props this)
+          {:keys [todo/completed todo/editing]} props
           class (cond-> ""
                   completed (str "completed ")
                   editing   (str "editing"))]
-      (dom/li #js {:className class :style (hidden (:todo/hidden props))}
+      (dom/li #js {:className class}
         (dom/div #js {:className "view"}
-          (dom/input
-            #js {:className "toggle"
-                 :type      "checkbox"
-                 :checked   (and completed "checked")
-                 :onChange  (fn [_]
-                              (om/call this 'todo/update
-                                {:db/id id :todo/completed (not completed)}))})
-          (dom/label
-            #js {:onDoubleClick (fn [e] (edit this props))}
-            title)
-          (dom/button
-            #js {:className "destroy"
-                 :onClick (fn [_] (om/call this 'todo/delete))}))
-        (dom/input
-          #js {:ref       "editField"
-               :className "edit"
-               :value     (om/get-state this :edit-text)
-               :onBlur    #(submit this props)
-               :onChange  #(change this %)
-               :onKeyDown #(change this %)})))))
+          (checkbox this props)
+          (label this props)
+          (delete-button this props))
+        (edit-field this props)))))
 
 (def item (om/create-factory TodoItem))
