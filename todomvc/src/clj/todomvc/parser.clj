@@ -33,17 +33,17 @@
       :todo/created   (java.util.Date.)}])
   {:value [:todos/list]})
 
-(defmethod mutatef 'todos/set-state
+(defmethod mutatef 'todo/set-state
   [{:keys [conn]} k {:keys [db/id todo/completed]}]
   (d/transact conn [{:db/id id :todo/completed completed}])
   {:value [id]})
 
-(defmethod mutatef 'todos/change-title
+(defmethod mutatef 'todo/change-title
   [{:keys [conn]} k {:keys [db/id todo/title]}]
   (d/transact conn [{:db/id id :todo/title title}])
   {:value [id]})
 
-(defmethod mutatef 'todos/delete
+(defmethod mutatef 'todo/delete
   [{:keys [conn]} k {:keys [db/id]}]
   (d/transact conn [[:db.fn/retractEntity id]])
   {:value [:todos/list]})
@@ -63,7 +63,7 @@
 
   (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
 
-  (p {:conn conn} '[(todos/delete {:db/id 17592186045418})])
+  (p {:conn conn} '[(todo/delete {:db/id 17592186045418})])
 
   ;; this fails
   (d/transact conn
