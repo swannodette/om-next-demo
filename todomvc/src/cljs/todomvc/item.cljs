@@ -7,26 +7,26 @@
 (def ESCAPE_KEY 27)
 (def ENTER_KEY 13)
 
-(defn submit [c]
+(defn submit [c {:keys [db/id todo/title] :as props}]
   (when-let [edit-text (-> c om/get-state :edit-text)]
     (if-not (string/blank? (.trim edit-text))
-      (om/call c 'todos/save)
+      (om/call c 'todos/update {:db/id id :todo/title title})
       (om/call c 'todos/delete-temp)))
   false)
 
-(defn edit [c {:keys [title] :as props}]
-  (om/call c 'todos/edit)
+(defn edit [c {:keys [db/id todos/title] :as props}]
+  (om/call c 'todos/edit {:db/id id})
   (om/update-state! c merge
     {:needs-focus true :title title}))
 
-(defn key-down [c {:keys [title] :as props} e]
+(defn key-down [c {:keys [todos/title] :as props} e]
   (condp == (.-keyCode e)
     ESCAPE_KEY
       (do
         (om/call c 'todos/cancel-edit)
         (om/update-state! c assoc :edit-text title))
     ENTER_KEY
-      (submit c)
+      (submit c props)
     nil))
 
 (defn change [c e]
@@ -63,8 +63,8 @@
                  :type      "checkbox"
                  :checked   (and completed "checked")
                  :onChange  (fn [_]
-                              (om/call this 'todo/set-state
-                                {:db/id id :todo/completed}))})
+                              (om/call this 'todo/update
+                                {:db/id id :todo/completed (not completed)}))})
           (dom/label
             #js {:onDoubleClick (fn [e] (edit this props))}
             title)

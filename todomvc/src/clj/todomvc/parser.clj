@@ -41,14 +41,14 @@
       :todo/created   (java.util.Date.)}])
   {:value [:todos/list]})
 
-(defmethod mutatef 'todo/set-state
-  [{:keys [conn]} k {:keys [db/id todo/completed]}]
-  (d/transact conn [{:db/id id :todo/completed completed}])
-  {:value [id]})
-
-(defmethod mutatef 'todo/change-title
-  [{:keys [conn]} k {:keys [db/id todo/title]}]
-  (d/transact conn [{:db/id id :todo/title title}])
+(defmethod mutatef 'todo/update
+  [{:keys [conn]} k {:keys [db/id todo/completed todo/title]}]
+  (d/transact conn
+    [(merge {:db/id id}
+       (when (or (true? completed) (false? completed))
+         {:todo/completed completed})
+       (when title
+         {:todo/title title}))])
   {:value [id]})
 
 (defmethod mutatef 'todo/delete
@@ -69,7 +69,7 @@
 
   (p {:conn conn} [{:todos/list [:db/id :todo/title :todo/completed]}])
 
-  (p {:conn conn} '[(todo/set-state {:db/id 17592186045424 :todo/completed true})])
+  (p {:conn conn} '[(todo/update {:db/id 17592186045424 :todo/completed false})])
 
   (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
 
