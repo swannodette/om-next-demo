@@ -37,7 +37,7 @@
     (dom/span #js {:id "todo-count"}
       (dom/strong nil count)
       (str " " (pluralize count "item") " left"))
-    (apply dom/ul #js {:id "filters" :className (name (:showing app))}
+    (apply dom/ul #js {:id "filters" :className (name (:todos/showing app))}
       (map (fn [[x y]] (dom/li nil (dom/a #js {:href (str "#/" x)} y)))
         [["" "All"] ["active" "Active"] ["completed" "Completed"]]))
     (clear-button completed)))
@@ -53,7 +53,8 @@
 
   Object
   (render [this]
-    (let [props (om/props this)]
+    (let [props (merge (om/props this) {:todos/showing :all})]
+      (println props)
       (dom/div nil
         (dom/header #js {:id "header"}
           (dom/h1 nil "todos")
