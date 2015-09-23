@@ -67,9 +67,11 @@
 
 (def todos (om/create-factory Todos))
 
+(def app-state (atom {}))
+
 (def reconciler
   (om/reconciler
-    {:state  (atom {})
+    {:state  app-state
      :parser (om/parser
                {:read   (fn [_ _ _] {:quote true})
                 :mutate (fn [_ _ _] {:quote true})})
