@@ -54,7 +54,6 @@
   Object
   (render [this]
     (let [props (merge (om/props this) {:todos/showing :all})]
-      (println props)
       (dom/div nil
         (dom/header #js {:id "header"}
           (dom/h1 nil "todos")
