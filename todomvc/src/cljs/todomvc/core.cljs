@@ -2,21 +2,15 @@
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [secretary.macros :refer [defroute]])
   (:require [goog.events :as events]
+            [goog.dom :as gdom]
             [secretary.core :as secretary]
             [cljs.core.async :refer [put! <! chan]]
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
-            [clojure.string :as string]
             [todomvc.util :as util :refer [hidden pluralize]]
             [todomvc.item :as item])
   (:import [goog History]
            [goog.history EventType]))
-
-;; -----------------------------------------------------------------------------
-;; Utilities
-
-(defn toggle-all [e c]
-  )
 
 ;; -----------------------------------------------------------------------------
 ;; Components
@@ -76,11 +70,20 @@
 
 (def reconciler
   (om/reconciler
-    {:state   (atom {})
-     :parser  (om/parser
-                {:read (fn [env k params] {:quote true})
-                 :mutate (fn [env k params] {:quote true})})}))
+    {:state  (atom {})
+     :parser (om/parser
+               {:read (fn [env k params] {:quote true})
+                :mutate (fn [env k params] {:quote true})})}))
+
+(om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
 (comment
   (go (println (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
+
+  (def p
+    (om/parser
+      {:read (fn [env k params] {:quote true})
+       :mutate (fn [env k params] {:quote true})}))
+
+  (p {} (om/get-query Todos) true)
   )
