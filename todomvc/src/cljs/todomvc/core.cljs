@@ -71,8 +71,8 @@
   (om/reconciler
     {:state  (atom {})
      :parser (om/parser
-               {:read (fn [env k params] {:quote true})
-                :mutate (fn [env k params] {:quote true})})
+               {:read   (fn [_ _ _] {:quote true})
+                :mutate (fn [_ _ _] {:quote true})})
      :send   (util/transit-post "/api")}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
@@ -82,7 +82,7 @@
 
   (def p
     (om/parser
-      {:read (fn [env k params] {:quote true})
+      {:read   (fn [env k params] {:quote true})
        :mutate (fn [env k params] {:quote true})}))
 
   (p {} (om/get-query Todos) true)
