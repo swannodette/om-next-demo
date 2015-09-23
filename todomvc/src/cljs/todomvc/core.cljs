@@ -71,16 +71,30 @@
 
 (def reconciler
   (om/reconciler
-    {:state  app-state
-     :parser (om/parser
-               {:read   (fn [_ _ _] {:quote true})
-                :mutate (fn [_ _ _] {:quote true})})
-     :send   (util/transit-post "/api")}))
+    {:state   app-state
+     :parser  (om/parser
+                {:read   (fn [_ _ _] {:quote true})
+                 :mutate (fn [_ _ _] {:quote true})})
+     :send    (util/transit-post "/api")
+     :ui->ref (fn [c]
+                (if-let [id (-> c om/props :db/id)]
+                  id
+                  c))}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
 (comment
   (go (println (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
+
+  (require '[cljs.pprint :as pprint])
+
+  (pprint/pprint
+    @(:indexes (get-in reconciler [:config :indexer])))
+
+  (def idxs @(:indexes (get-in reconciler [:config :indexer])))
+
+  (-> (get-in idxs [:ref->components 17592186045418])
+    focus-)
 
   (def p
     (om/parser

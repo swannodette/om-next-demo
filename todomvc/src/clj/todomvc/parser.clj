@@ -28,6 +28,11 @@
              (= :active filter)    (conj '[?eid :todo/completed false]))]
      (d/q q db selector))))
 
+(defmethod readf :todo/by-id
+  [{:keys [conn selector]} _ {:keys [db/id]}]
+  (let [db (d/db conn)]
+    {:value (d/pull db selector id)}))
+
 (defmethod readf :todos/list
   [{:keys [conn selector]} _ _]
   {:value (todos (d/db conn) selector)})
@@ -81,4 +86,13 @@
       :todo/title     nil
       :todo/completed false
       :todo/created   (java.util.Date.)}])
+
+  ;; can pull
+  (let [db (d/db conn)]
+    (d/pull db [:db/id :todo/title] 17592186045418))
+
+  (let [id 17592186045418]
+    (p {:conn conn}
+     `[(todo/update {:db/id 17592186045424 :todo/completed false})
+       ({:todo/by-id [:todo/title :todo/completed]} {:db/id ~id})]))
   )
