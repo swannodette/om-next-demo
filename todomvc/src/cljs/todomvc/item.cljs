@@ -77,3 +77,5 @@
                :onBlur    #(submit this)
                :onChange  #(change this %)
                :onKeyDown #(change this %)})))))
+
+(def item (om/create-factory TodoItem))

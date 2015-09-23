@@ -15,14 +15,15 @@
 ;; -----------------------------------------------------------------------------
 ;; Components
 
-(defn main [{:keys [todos showing editing] :as app}]
-  (dom/section #js {:id "main" :style (hidden (empty? todos))}
+(defn main [{:keys [todos/list] :as app}]
+  (dom/section #js {:id "main" :style (hidden (empty? list))}
     (dom/input
       #js {:id       "toggle-all"
            :type     "checkbox"
-           :onChange #(toggle-all % app)
-           :checked  (every? :completed todos)})
-    (apply dom/ul #js {:id "todo-list"} todos)))
+           :onChange identity
+           :checked  (every? :todo/completed list)})
+    (apply dom/ul #js {:id "todo-list"}
+      (map #(item/item %) list))))
 
 (defn clear-button [completed]
   (when (pos? completed)
@@ -52,9 +53,7 @@
 
   Object
   (render [this]
-    (let [{:keys [todos] :as app} {:todos [] :showing :all :editing nil}
-          active (count (remove :completed todos))
-          completed (- (count todos) active)]
+    (let [props (om/props this)]
       (dom/div nil
         (dom/header #js {:id "header"}
           (dom/h1 nil "todos")
@@ -63,8 +62,8 @@
                  :id "new-todo"
                  :placeholder "What needs to be done?"
                  :onKeyDown #(do %)})
-          (main app)
-          (footer app active completed))))))
+          (main props)
+          (footer props 0 0))))))
 
 (def todos (om/create-factory Todos))
 
