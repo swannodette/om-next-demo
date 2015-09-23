@@ -73,7 +73,8 @@
     {:state  (atom {})
      :parser (om/parser
                {:read (fn [env k params] {:quote true})
-                :mutate (fn [env k params] {:quote true})})}))
+                :mutate (fn [env k params] {:quote true})})
+     :send   (util/transit-post "/api")}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
