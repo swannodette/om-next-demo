@@ -7,7 +7,7 @@
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [clojure.string :as string]
-            [todomvc.util :refer [hidden pluralize]]
+            [todomvc.util :as util :refer [hidden pluralize]]
             [todomvc.item :as item])
   (:import [goog History]
            [goog.history EventType]))
@@ -54,7 +54,7 @@
 
   static om/IQuery
   (query [this]
-    '[{:todo/list ?todo-item}])
+    '[{:todos/list ?todo-item}])
 
   Object
   (render [this]
@@ -78,9 +78,9 @@
   (om/reconciler
     {:state   (atom {})
      :parser  (om/parser
-                {:read parser/read
-                 :mutate parser/mutate})}))
+                {:read (fn [env k params] {:quote true})
+                 :mutate (fn [env k params] {:quote true})})}))
 
 (comment
-  (om/get-query Todos)
+  (go (println (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
   )
