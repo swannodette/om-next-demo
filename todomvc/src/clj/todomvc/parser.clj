@@ -3,7 +3,15 @@
 
 (defmulti readf (fn [env k params] k))
 
+(defmethod readf :default
+  [_ k _]
+  {:value {:error (str "No handler for read key " k)}})
+
 (defmulti mutatef (fn [env k params] k))
+
+(defmethod mutatef :default
+  [_ k _]
+  {:value {:error (str "No handler for mutation key " k)}})
 
 (defn todos
   ([db]
