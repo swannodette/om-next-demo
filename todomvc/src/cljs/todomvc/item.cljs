@@ -9,7 +9,7 @@
 
 (defn submit [c {:keys [db/id todo/title] :as props}]
   (when-let [edit-text (om/get-state c :edit-text)]
-    (om/transact
+    (om/transact c
       (cond-> `[(todos/cancel-edit) (todos/delete-temp)]
         (not (string/blank? (.trim edit-text)))
         (conj `[(todos/update {:db/id ~id :todo/title ~title})]))))
@@ -40,11 +40,13 @@
 (defn checkbox [c {:keys [:db/id :todo/completed]}]
   (dom/input
     #js {:className "toggle"
-         :type      "checkbox"
-         :checked   (and completed "checked")
-         :onChange  (fn [_]
-                      (om/call c 'todo/update
-                        {:db/id id :todo/completed (not completed)}))}))
+         :type "checkbox"
+         :checked (and completed "checked")
+         :onChange (fn [_]
+                     (om/transact c
+                       `[(todo/update
+                           {:db/id ~id :todo/completed ~(not completed)})
+                         [:todos/by-id ~id]]))}))
 
 (defn label [c {:keys [todo/title] :as props}]
   (dom/label

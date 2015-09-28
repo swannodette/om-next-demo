@@ -92,9 +92,6 @@
 
   (def idxs @(:indexes (get-in reconciler [:config :indexer])))
 
-  (-> (get-in idxs [:ref->components 17592186045418])
-    focus-)
-
   (def p
     (om/parser
       {:read   (fn [env k params] {:quote true})
