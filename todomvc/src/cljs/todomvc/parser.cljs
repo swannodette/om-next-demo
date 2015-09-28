@@ -25,15 +25,13 @@
   [{:keys [state indexer]} _ {:keys [db/id]}]
   {:action
    (fn []
-     (let [path (first (om/key->paths indexer [:todos/by-id id]))]
-       (swap! state assoc-in (conj path :editing) true)))})
+     (swap! state assoc :todos/editing [:todos/by-id id]))})
 
 (defmethod mutate 'todo/cancel-edit
   [{:keys [state indexer]} _ {:keys [db/id]}]
   {:action
    (fn []
-     (let [path (first (om/key->paths indexer [:todos/by-id id]))]
-       (swap! state assoc-in (conj path :editing) false)))})
+     (swap! state dissoc :todos/editing))})
 
 (defmethod mutate 'todos/create-temp
   [{:keys [state]} _ new-todo]
