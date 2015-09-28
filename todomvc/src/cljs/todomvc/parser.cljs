@@ -1,13 +1,20 @@
 (ns todomvc.parser
   (:require [om.next :as om]))
 
+;; =============================================================================
+;; Reads
+
 (defmulti read om/dispatch)
 
 (defmethod read :default
   [{:keys [state]} k _]
-  (case k
-    :todos/temp (:todos/temp state)
-    {:quote true}))
+  (let [st @state]
+    (if (contains? st k)
+      {:value (get st k)}
+      {:quote true})))
+
+;; =============================================================================
+;; Mutations
 
 (defmulti mutate om/dispatch)
 
