@@ -77,7 +77,7 @@
      :send    (util/transit-post "/api")
      :ui->ref (fn [c]
                 (if-let [id (-> c om/props :db/id)]
-                  id
+                  [:todos/by-id id]
                   c))}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)

@@ -1,4 +1,5 @@
 (ns todomvc.parser
+  (:refer-clojure :exclude [read])
   (:require [datomic.api :as d]))
 
 ;; =============================================================================
@@ -56,7 +57,7 @@
 
 (defmethod mutatef 'todo/update
   [{:keys [conn]} k {:keys [db/id todo/completed todo/title]}]
-  {:value [{:todos/by-id {:db/id id}}]
+  {:value [[:todos/by-id id]]
    :action
    (fn []
      (d/transact conn
