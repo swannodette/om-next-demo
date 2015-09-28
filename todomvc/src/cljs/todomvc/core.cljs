@@ -24,7 +24,10 @@
            :onChange identity
            :checked  (every? :todo/completed list)})
     (apply dom/ul #js {:id "todo-list"}
-      (map #(item/item %) list))))
+      (map-indexed
+        (fn [i props]
+          (item/item (assoc props :om-index i)))
+        list))))
 
 (defn clear-button [completed]
   (when (pos? completed)
