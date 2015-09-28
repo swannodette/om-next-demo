@@ -24,14 +24,16 @@
 (defmethod mutate 'todo/edit
   [{:keys [state indexer]} _ {:keys [db/id]}]
   {:action
-   (fn [] (swap! state assoc-in
-            (first (om/key->paths indexer id)) :editing true))})
+   (fn []
+     (let [path (first (om/key->paths indexer [:todos/by-id id]))]
+       (swap! state assoc-in (conj path :editing) true)))})
 
 (defmethod mutate 'todo/cancel-edit
   [{:keys [state indexer]} _ {:keys [db/id]}]
   {:action
-   (fn [] (swap! state assoc-in
-            (first (om/key->paths indexer id)) :editing false))})
+   (fn []
+     (let [path (first (om/key->paths indexer [:todos/by-id id]))]
+       (swap! state assoc-in (conj path :editing) false)))})
 
 (defmethod mutate 'todos/create-temp
   [{:keys [state]} _ new-todo]
@@ -42,3 +44,18 @@
   [{:keys [state]} _ {:keys [db/id]}]
   {:value [:todos/list]
    :action (fn [] (swap! state dissoc :todos/temp))})
+
+(comment
+  (require '[cljs.pprint :as pprint])
+
+  (def p (om/parser {:read read :mutate mutate}))
+
+  (p {:state   todomvc.core/app-state
+      :indexer (om/get-indexer todomvc.core/reconciler)}
+    '[(todo/edit {:db/id 17592186045418})])
+
+  (pprint/pprint @(om/get-indexer todomvc.core/reconciler))
+
+  (om/key->paths (om/get-indexer todomvc.core/reconciler)
+    [:todos/by-id 17592186045418])
+  )

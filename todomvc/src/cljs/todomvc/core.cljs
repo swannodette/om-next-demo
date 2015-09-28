@@ -90,10 +90,12 @@
 
   (require '[cljs.pprint :as pprint])
 
-  (pprint/pprint
-    @(:indexes (get-in reconciler [:config :indexer])))
+  (pprint/pprint @(get-in reconciler [:config :indexer]))
 
-  (def idxs @(:indexes (get-in reconciler [:config :indexer])))
+  (def idxr (get-in reconciler [:config :indexer]))
+  (def idxs @idxr)
+
+  (om/props (first (om/key->components idxr [:todos/by-id 17592186045418])))
 
   (def p
     (om/parser
