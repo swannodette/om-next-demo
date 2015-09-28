@@ -1,21 +1,18 @@
 (ns todomvc.parser
   (:require [datomic.api :as d]))
 
+;; =============================================================================
+;; Reads
+
 (defmulti readf (fn [env k params] k))
 
 (defmethod readf :default
   [_ k _]
   {:value {:error (str "No handler for read key " k)}})
 
-(defmulti mutatef (fn [env k params] k))
-
-(defmethod mutatef :default
-  [_ k _]
-  {:value {:error (str "No handler for mutation key " k)}})
-
 (defn todos
   ([db]
-   (todos db '[*]))
+   (todos db nil))
   ([db selector]
    (todos db selector nil))
   ([db selector filter]
@@ -26,7 +23,7 @@
                [?eid :todo/created]]
              (= :completed filter) (conj '[?eid :todo/completed true])
              (= :active filter)    (conj '[?eid :todo/completed false]))]
-     (d/q q db selector))))
+     (d/q q db (or selector '[*])))))
 
 (defmethod readf :todos/by-id
   [{:keys [conn selector]} _ {:keys [id]}]
@@ -36,6 +33,15 @@
 (defmethod readf :todos/list
   [{:keys [conn selector]} _ _]
   {:value (todos (d/db conn) selector)})
+
+;; =============================================================================
+;; Mutations
+
+(defmulti mutatef (fn [env k params] k))
+
+(defmethod mutatef :default
+  [_ k _]
+  {:value {:error (str "No handler for mutation key " k)}})
 
 (defmethod mutatef 'todos/create
   [{:keys [conn]} k {:keys [:todo/title]}]
@@ -112,5 +118,11 @@
 
   (let [id 17592186045418]
     (p {:conn conn}
-      `[(todo/update {:db/id ~id :todo/completed true})]))
+      `[(todo/update {:db/id ~id :todo/completed false})
+        [:todos/by-id ~id]]))
+
+  (let [id 17592186045418]
+    (p {:conn conn}
+      `[(todo/update {:db/id ~id :todo/completed true})
+        :todos/list]))
   )
