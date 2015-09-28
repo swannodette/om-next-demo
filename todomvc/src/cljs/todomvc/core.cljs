@@ -8,7 +8,8 @@
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [todomvc.util :as util :refer [hidden pluralize]]
-            [todomvc.item :as item])
+            [todomvc.item :as item]
+            [todomvc.parser :as p])
   (:import [goog History]
            [goog.history EventType]))
 
@@ -72,9 +73,7 @@
 (def reconciler
   (om/reconciler
     {:state   app-state
-     :parser  (om/parser
-                {:read   (fn [_ _ _] {:quote true})
-                 :mutate (fn [_ _ _] {:quote true})})
+     :parser  (om/parser {:read p/read :mutate p/mutate})
      :send    (util/transit-post "/api")
      :ui->ref (fn [c]
                 (if-let [id (-> c om/props :db/id)]

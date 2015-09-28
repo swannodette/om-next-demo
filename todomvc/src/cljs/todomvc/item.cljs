@@ -10,7 +10,8 @@
 (defn submit [c {:keys [db/id todo/title] :as props}]
   (when-let [edit-text (-> c om/get-state :edit-text)]
     (if-not (string/blank? (.trim edit-text))
-      (om/call c 'todos/update {:db/id id :todo/title title})
+      (om/call c 'todos/update {:db/id id :todo/title title}
+        [:todos/by-id id])
       (om/call c 'todos/delete-temp)))
   false)
 
