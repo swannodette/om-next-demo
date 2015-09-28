@@ -28,10 +28,10 @@
              (= :active filter)    (conj '[?eid :todo/completed false]))]
      (d/q q db selector))))
 
-(defmethod readf :todo/by-id
-  [{:keys [conn selector]} _ {:keys [db/id]}]
+(defmethod readf :todos/by-id
+  [{:keys [conn selector]} _ {:keys [id]}]
   (let [db (d/db conn)]
-    {:value (d/pull db selector id)}))
+    {:value (d/pull db (or selector '[*]) id)}))
 
 (defmethod readf :todos/list
   [{:keys [conn selector]} _ _]
@@ -101,6 +101,16 @@
 
   (let [id 17592186045418]
     (p {:conn conn}
-     `[(todo/update {:db/id 17592186045424 :todo/completed false})
-       ({:todo/by-id [:todo/title :todo/completed]} {:db/id ~id})]))
+     `[(todo/update {:db/id ~id :todo/completed true})
+       [:todos/by-id ~id]]))
+
+  (let [id 17592186045418]
+    (p {:conn conn} `[[:todos/by-id ~id]]))
+
+  (let [id 17592186045418]
+    (p {:conn conn} `[{[:todos/by-id ~id] [:todo/title]}]))
+
+  (let [id 17592186045418]
+    (p {:conn conn}
+      `[(todo/update {:db/id ~id :todo/completed true})]))
   )
