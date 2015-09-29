@@ -76,8 +76,8 @@
     [:db/id :todo/editing :todo/completed :todo/title])
 
   Object
-  (componentDidUpdate [this next-props next-state]
-    (when (and (:todo/editing next-props)
+  (componentDidUpdate [this prev-props prev-state]
+    (when (and (:todo/editing (om/props this))
                (om/get-state this :needs-focus))
       (let [node (om/dom-node this "editField")
             len  (.. node -value -length)]
