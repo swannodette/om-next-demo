@@ -8,7 +8,7 @@
 
 (defmethod read :default
   [{:keys [state]} k _]
-  (let [st @state]
+  (let [st @state] ;; CACHING!!!
     (if (contains? st k)
       {:value (get st k)}
       {:quote true})))
@@ -18,6 +18,7 @@
   (let [st @state]
     (if-let [list (get st k)]
       (if-let [ref (:todos/editing st)]
+        ;; TRANPARENTLY MERGE LOCAL STATE
         {:value (update-in list
                   (om/subpath k (om/key->any indexer ref))
                   assoc :todo/editing true)}
