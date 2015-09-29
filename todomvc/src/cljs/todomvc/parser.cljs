@@ -63,29 +63,3 @@
   [{:keys [state]} _ _]
   {:value [:todos/list]
    :action (fn [] (swap! state dissoc :todos/temp))})
-
-(comment
-  (require '[cljs.pprint :as pprint])
-
-  (def p (om/parser {:read read :mutate mutate}))
-
-  (def idxr (om/get-indexer todomvc.core/reconciler))
-
-  todomvc.core/app-state
-
-  (first (om/key->components idxr [:todos/by-id 17592186045418]))
-
-  (let [ref [:todos/by-id 17592186045418]]
-    (om/transact (first (om/key->components idxr ref))
-      `[(todo/edit {:db/id 17592186045418}) ~ref]))
-
-  (let [ref [:todos/by-id 17592186045418]]
-    (om/transact (first (om/key->components idxr ref))
-      `[(todo/edit {:db/id 17592186045418}) ~ref]))
-
-  (pprint/pprint @(om/get-indexer todomvc.core/reconciler))
-
-  (first
-    (om/key->paths (om/get-indexer todomvc.core/reconciler)
-      [:todos/by-id 17592186045418]))
-  )

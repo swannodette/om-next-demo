@@ -88,59 +88,13 @@
 
   (p {:conn conn} [{:todos/list [:db/id :todo/title :todo/completed]}])
 
-  (p {:conn conn}
-    '[({:todos/list [:db/id :todo/title :todo/completed]}
-       {:as-of #inst "1970-01-01T00:00:00.000-00:00"})])
-
-  ;; HATEOS style
-  (p {:conn conn}
-    '[(todo/update {:db/id 17592186045418 :todo/completed true})])
-
   (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
 
   (p {:conn conn} '[(todo/delete {:db/id 17592186045418})])
-
-  ;; this fails
-  (d/transact conn
-    [{:db/id          #db/id[:db.part/user]
-      :todo/title     nil
-      :todo/completed false
-      :todo/created   (java.util.Date.)}])
-
-  ;; can pull
-  (let [db (d/db conn)]
-    (d/pull db [:db/id :todo/title] 17592186045418))
 
   (let [id 17592186045418]
     (p {:conn conn}
      `[(todo/update {:db/id ~id :todo/completed true})
        [:todos/by-id ~id]]))
 
-  (let [id 17592186045418]
-    (p {:conn conn} `[[:todos/by-id ~id]]))
-
-  (let [id 17592186045418]
-    (p {:conn conn} `[{[:todos/by-id ~id] [:todo/title]}]))
-
-  (let [id 17592186045418]
-    (p {:conn conn}
-      `[(todo/update {:db/id ~id :todo/completed true})
-        [:todos/by-id ~id]]))
-
-  (let [id 17592186045418]
-    (p {:conn conn}
-      `[(todo/update {:db/id ~id :todo/completed true})
-        :todos/list]))
-
-  (d/q '[:find [(pull ?eid selector) ...]
-         :in $ selector
-         :where
-         [?eid :todo/created]]
-    (d/as-of (d/db conn) #inst "1970-01-01T00:00:00.000-00:00") '[*])
-
-  (d/q '[:find [(pull ?eid selector) ...]
-         :in $ selector
-         :where
-         [?eid :db/txInstant]]
-    (d/as-of (d/db conn) #inst "1970-01-01T00:00:00.000-00:00") '[*])
   )

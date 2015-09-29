@@ -25,8 +25,9 @@
            :checked  (every? :todo/completed list)})
     (apply dom/ul #js {:id "todo-list"}
       (map-indexed
-        (fn [i props]
-          (item/item (assoc props :om-index i)))
+        (fn [i {:keys [db/id] :as props}]
+          (item/item
+            (assoc props :react-key id :om-index i)))
         list))))
 
 (defn clear-button [completed]
@@ -88,36 +89,18 @@
 (comment
   (require '[cljs.pprint :as pprint])
 
+  (om/get-query Todos)
+
   (go (pprint/pprint
         (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
 
   (go (pprint/pprint
         (<! (util/transit-post-chan "/api"
               `[({:todos/list ~(om/get-query item/TodoItem)}
-                  {:as-of #inst "2015-09-29T03:30:42.620-00:00"})]))))
+                  {:as-of #inst "2015-09-29T06:08:59.022-00:00"})]))))
 
   (go (reset! app-state
         (<! (util/transit-post-chan "/api"
               `[({:todos/list ~(om/get-query item/TodoItem)}
-                  {:as-of #inst "2015-09-29T03:00:42.620-00:00"})]))))
-
-  (go (reset! app-state
-        (<! (util/transit-post-chan "/api"
-              `[({:todos/list ~(om/get-query item/TodoItem)})]))))
-
-  (require '[cljs.pprint :as pprint])
-
-  (pprint/pprint @(get-in reconciler [:config :indexer]))
-
-  (def idxr (get-in reconciler [:config :indexer]))
-  (def idxs @idxr)
-
-  (om/props (first (om/key->components idxr [:todos/by-id 17592186045418])))
-
-  (def p
-    (om/parser
-      {:read   (fn [env k params] {:quote true})
-       :mutate (fn [env k params] {:quote true})}))
-
-  (p {} (om/get-query Todos) true)
+                  #_{:as-of #inst "2015-09-29T06:08:59.022-00:00"})]))))
   )
