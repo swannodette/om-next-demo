@@ -76,19 +76,23 @@
      @(d/transact conn [[:db.fn/retractEntity id]]))})
 
 (comment
-  (require '[todomvc.core :as cc])
+  (require '[todomvc.core :as cc]
+           '[om.next.server :refer [parser]]
+           '[clojure.pprint :as pprint])
 
   (cc/dev-start)
 
   (def conn (:connection (:db @cc/servlet-system)))
 
-  (require '[om.next.server :refer [parser]])
-
   (def p (parser {:read readf :mutate mutatef}))
 
-  (p {:conn conn} [{:todos/list [:db/id :todo/title :todo/completed]}])
+  (pprint/pprint
+    (p {:conn conn}
+      [{:todos/list [:db/id :todo/title :todo/completed]}]))
 
-  (p {:conn conn} '[(todos/create {:todo/title "Finish Om"})])
+  (pprint/pprint
+    (p {:conn conn}
+      '[(todos/create {:todo/title "Finish Om"})]))
 
   (p {:conn conn} '[(todo/delete {:db/id 17592186045418})])
 
@@ -96,5 +100,4 @@
     (p {:conn conn}
      `[(todo/update {:db/id ~id :todo/completed true})
        [:todos/by-id ~id]]))
-
   )

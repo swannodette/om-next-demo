@@ -3,6 +3,7 @@
                    [secretary.macros :refer [defroute]])
   (:require [goog.events :as events]
             [goog.dom :as gdom]
+            [cljs.pprint :as pprint]
             [secretary.core :as secretary]
             [cljs.core.async :refer [put! <! chan]]
             [om.next :as om :refer-macros [defui]]
@@ -87,8 +88,6 @@
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
 (comment
-  (require '[cljs.pprint :as pprint])
-
   (om/get-query Todos)
 
   (go (pprint/pprint
@@ -97,10 +96,20 @@
   (go (pprint/pprint
         (<! (util/transit-post-chan "/api"
               `[({:todos/list ~(om/get-query item/TodoItem)}
-                  {:as-of #inst "2015-09-29T06:08:59.022-00:00"})]))))
+                  {:as-of #inst "2015-09-29T14:27:02.270-00:00"})]))))
 
   (go (reset! app-state
         (<! (util/transit-post-chan "/api"
               `[({:todos/list ~(om/get-query item/TodoItem)}
-                  #_{:as-of #inst "2015-09-29T06:08:59.022-00:00"})]))))
+                  {:as-of #inst "2015-09-29T14:27:02.270-00:00"})]))))
+
+  (def idxr (om/get-indexer reconciler))
+
+  ;; The Indexer!
+
+  (pprint/pprint @idxr)
+
+  (let [c (first (om/key->components idxr
+                   [:todos/by-id 17592186045418]))]
+    (om/props c))
   )
