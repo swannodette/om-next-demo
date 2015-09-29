@@ -10,15 +10,15 @@
 (defn submit [c {:keys [db/id todo/title] :as props}]
   (when-let [edit-text (om/get-state c :edit-text)]
     (om/transact c
-      (cond-> `[(todos/cancel-edit) (todos/delete-temp)]
+      (cond-> `[(todo/cancel-edit) (todos/delete-temp)]
         (not (string/blank? (.trim edit-text)))
-        (conj `[(todos/update {:db/id ~id :todo/title ~title})]))))
+        (conj `[(todo/update {:db/id ~id :todo/title ~title})]))))
   false)
 
 (defn edit [c {:keys [db/id todos/title] :as props}]
-  (om/call c 'todos/edit {:db/id id})
-  (om/update-state! c merge
-    {:needs-focus true :title title}))
+  (om/transact c
+    `[(todo/edit {:db/id ~id}) [:todos/by-id ~id]])
+  (om/update-state! c merge {:needs-focus true :edit-text title}))
 
 (defn key-down [c {:keys [todos/title] :as props} e]
   (condp == (.-keyCode e)
