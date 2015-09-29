@@ -73,8 +73,7 @@
 
   (let [ref [:todos/by-id 17592186045418]]
     (om/transact (first (om/key->components idxr ref))
-      `[(todo/edit {:db/id 17592186045418})
-        [:todos/by-id 17592186045418]]))
+      `[(todo/edit {:db/id 17592186045418}) ~ref]))
 
   (pprint/pprint @(om/get-indexer todomvc.core/reconciler))
 
