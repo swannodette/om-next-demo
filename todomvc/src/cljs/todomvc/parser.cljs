@@ -13,6 +13,17 @@
       {:value (get st k)}
       {:quote true})))
 
+(defmethod read :todos/list
+  [{:keys [state indexer]} k _]
+  (let [st @state]
+    (if-let [list (get st k)]
+      (if-let [ref (:todos/editing st)]
+        {:value (update-in list
+                  (om/subpath k (first (om/key->paths indexer ref)))
+                  assoc :todo/editing true)}
+        {:value list})
+      {:quote true})))
+
 ;; =============================================================================
 ;; Mutations
 
@@ -48,12 +59,26 @@
 
   (def p (om/parser {:read read :mutate mutate}))
 
-  (p {:state   todomvc.core/app-state
-      :indexer (om/get-indexer todomvc.core/reconciler)}
-    '[(todo/edit {:db/id 17592186045418})])
+  (def idxr (om/get-indexer todomvc.core/reconciler))
+
+  todomvc.core/app-state
+
+  (first (om/key->components idxr [:todos/by-id 17592186045418]))
+
+  (p {:state todomvc.core/app-state}
+    '[:todos/list])
+
+  (p {:state todomvc.core/app-state}
+    '[{:todos/list [:db/id]}])
+
+  (let [ref [:todos/by-id 17592186045418]]
+    (om/transact (first (om/key->components idxr ref))
+      `[(todo/edit {:db/id 17592186045418})
+        [:todos/by-id 17592186045418]]))
 
   (pprint/pprint @(om/get-indexer todomvc.core/reconciler))
 
-  (om/key->paths (om/get-indexer todomvc.core/reconciler)
-    [:todos/by-id 17592186045418])
+  (first
+    (om/key->paths (om/get-indexer todomvc.core/reconciler)
+      [:todos/by-id 17592186045418]))
   )

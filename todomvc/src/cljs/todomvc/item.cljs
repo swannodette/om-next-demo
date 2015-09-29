@@ -74,7 +74,7 @@
 
   Object
   (componentDidUpdate [this next-props next-state]
-    (when (and (:editing next-props)
+    (when (and (:todo/editing next-props)
                (om/get-state this :needs-focus))
       (let [node (om/dom-node this "editField")
             len  (.. node -value -length)]
@@ -83,6 +83,7 @@
       (om/update-state! this assoc :needs-focus nil)))
 
   (render [this]
+    (println "TodoItem render")
     (let [props (om/props this)
           {:keys [todo/completed todo/editing]} props
           class (cond-> ""
