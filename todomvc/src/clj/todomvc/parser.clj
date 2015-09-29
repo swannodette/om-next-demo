@@ -16,14 +16,16 @@
    (todos db nil))
   ([db selector]
    (todos db selector nil))
-  ([db selector filter]
-   (let [q (cond->
-             '[:find [(pull ?eid selector) ...]
-               :in $ selector
-               :where
-               [?eid :todo/created]]
-             (= :completed filter) (conj '[?eid :todo/completed true])
-             (= :active filter)    (conj '[?eid :todo/completed false]))]
+  ([db selector {:keys [filter as-of]}]
+   (let [db (cond-> db
+              as-of (d/as-of as-of))
+         q  (cond->
+              '[:find [(pull ?eid selector) ...]
+                :in $ selector
+                :where
+                [?eid :todo/created]]
+              (= :completed filter) (conj '[?eid :todo/completed true])
+              (= :active filter)    (conj '[?eid :todo/completed false]))]
      (d/q q db (or selector '[*])))))
 
 (defmethod readf :todos/by-id
@@ -31,8 +33,8 @@
   {:value (d/pull @(d/sync conn) (or selector '[*]) id)})
 
 (defmethod readf :todos/list
-  [{:keys [conn selector]} _ _]
-  {:value (todos (d/db conn) selector)})
+  [{:keys [conn selector]} _ params]
+  {:value (todos (d/db conn) selector params)})
 
 ;; =============================================================================
 ;; Mutations
@@ -86,6 +88,10 @@
 
   (p {:conn conn} [{:todos/list [:db/id :todo/title :todo/completed]}])
 
+  (p {:conn conn}
+    '[({:todos/list [:db/id :todo/title :todo/completed]}
+       {:as-of #inst "1970-01-01T00:00:00.000-00:00"})])
+
   ;; HATEOS style
   (p {:conn conn}
     '[(todo/update {:db/id 17592186045418 :todo/completed true})])
@@ -125,4 +131,16 @@
     (p {:conn conn}
       `[(todo/update {:db/id ~id :todo/completed true})
         :todos/list]))
+
+  (d/q '[:find [(pull ?eid selector) ...]
+         :in $ selector
+         :where
+         [?eid :todo/created]]
+    (d/as-of (d/db conn) #inst "1970-01-01T00:00:00.000-00:00") '[*])
+
+  (d/q '[:find [(pull ?eid selector) ...]
+         :in $ selector
+         :where
+         [?eid :db/txInstant]]
+    (d/as-of (d/db conn) #inst "1970-01-01T00:00:00.000-00:00") '[*])
   )
