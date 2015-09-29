@@ -75,11 +75,9 @@
 
   (first (om/key->components idxr [:todos/by-id 17592186045418]))
 
-  (p {:state todomvc.core/app-state}
-    '[:todos/list])
-
-  (p {:state todomvc.core/app-state}
-    '[{:todos/list [:db/id]}])
+  (let [ref [:todos/by-id 17592186045418]]
+    (om/transact (first (om/key->components idxr ref))
+      `[(todo/edit {:db/id 17592186045418}) ~ref]))
 
   (let [ref [:todos/by-id 17592186045418]]
     (om/transact (first (om/key->components idxr ref))

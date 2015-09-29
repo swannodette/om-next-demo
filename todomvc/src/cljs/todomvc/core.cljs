@@ -86,7 +86,15 @@
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
 (comment
-  (go (println (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
+  (require '[cljs.pprint :as pprint])
+
+  (go (pprint/pprint
+        (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
+
+  (go (pprint/pprint
+        (<! (util/transit-post-chan "/api"
+              `[({:todos/list ~(om/get-query item/TodoItem)}
+                  {:as-of #inst "2015-09-29T03:00:42.620-00:00"})]))))
 
   (require '[cljs.pprint :as pprint])
 

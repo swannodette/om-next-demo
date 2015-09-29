@@ -88,7 +88,6 @@
       (om/update-state! this assoc :needs-focus nil)))
 
   (render [this]
-    (println "TodoItem render")
     (let [props (om/props this)
           {:keys [todo/completed todo/editing]} props
           class (cond-> ""
