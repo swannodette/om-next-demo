@@ -18,7 +18,7 @@
   (let [st @state]
     (if-let [list (get st k)]
       (if-let [ref (:todos/editing st)]
-        ;; TRANPARENTLY MERGE LOCAL STATE
+        ;; TRANSPARENTLY MERGE LOCAL STATE
         {:value (update-in list
                   (om/subpath k (om/key->any indexer ref))
                   assoc :todo/editing true)}
