@@ -16,8 +16,7 @@
   false)
 
 (defn edit [c {:keys [db/id todos/title] :as props}]
-  (om/transact c
-    `[(todo/edit {:db/id ~id})])
+  (om/call c 'todo/edit {:db/id id})
   (om/update-state! c merge {:needs-focus true :edit-text title}))
 
 (defn key-down [c {:keys [todos/title] :as props} e]
@@ -63,9 +62,9 @@
     #js {:ref       "editField"
          :className "edit"
          :value     (om/get-state c :edit-text)
-         :onBlur    #(submit c props)
-         :onChange  #(change c %)
-         :onKeyDown #(change c %)}))
+         :onBlur    (fn [_] (submit c props))
+         :onChange  (fn [e] (change c e))
+         :onKeyDown (fn [e] (change c e))}))
 
 (defui TodoItem
   static om/IQuery
