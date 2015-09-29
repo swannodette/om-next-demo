@@ -16,7 +16,9 @@
 
         (and (not (string/blank? edit-text))
              (not= edit-text title))
-        (conj `(todo/update {:db/id ~id :todo/title ~title}))))
+        (into
+          `[(todo/update {:db/id ~id :todo/title ~edit-text})
+            [:todos/by-id ~id]])))
     false))
 
 (defn edit [c {:keys [db/id todo/title] :as props}]
@@ -27,7 +29,7 @@
   (condp == (.-keyCode e)
     ESCAPE_KEY
       (do
-        (om/call c 'todos/cancel-edit)
+        (om/call c 'todo/cancel-edit)
         (om/update-state! c assoc :edit-text title))
     ENTER_KEY
       (submit c props)
@@ -68,7 +70,7 @@
          :value     (om/get-state c :edit-text)
          :onBlur    (fn [_] (submit c props))
          :onChange  (fn [e] (change c e))
-         :onKeyDown (fn [e] (change c e))}))
+         :onKeyDown (fn [e] (key-down c props e))}))
 
 (defui TodoItem
   static om/IQuery
