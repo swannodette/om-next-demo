@@ -8,12 +8,16 @@
 (def ENTER_KEY 13)
 
 (defn submit [c {:keys [db/id todo/title] :as props}]
-  (when-let [edit-text (om/get-state c :edit-text)]
+  (let [edit-text (string/trim (or (om/get-state c :edit-text) ""))]
     (om/transact c
-      (cond-> `[(todo/cancel-edit) (todos/delete-temp)]
-        (not (string/blank? (.trim edit-text)))
-        (conj `[(todo/update {:db/id ~id :todo/title ~title})]))))
-  false)
+      (cond-> `[(todo/cancel-edit)]
+        (= :temp id)
+        (conj '(todos/delete-temp))
+
+        (and (not (string/blank? edit-text))
+             (not= edit-text title))
+        (conj `(todo/update {:db/id ~id :todo/title ~title}))))
+    false))
 
 (defn edit [c {:keys [db/id todo/title] :as props}]
   (om/call c 'todo/edit {:db/id id})
