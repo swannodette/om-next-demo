@@ -10,7 +10,7 @@
 (defn submit [c {:keys [db/id todo/title] :as props}]
   (let [edit-text (string/trim (or (om/get-state c :edit-text) ""))]
     (om/transact c
-      (cond-> `[(todo/cancel-edit)]
+      (cond-> '[(todo/cancel-edit)]
         (= :temp id)
         (conj '(todos/delete-temp))
 
