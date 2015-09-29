@@ -15,11 +15,11 @@
         (conj `[(todo/update {:db/id ~id :todo/title ~title})]))))
   false)
 
-(defn edit [c {:keys [db/id todos/title] :as props}]
+(defn edit [c {:keys [db/id todo/title] :as props}]
   (om/call c 'todo/edit {:db/id id})
   (om/update-state! c merge {:needs-focus true :edit-text title}))
 
-(defn key-down [c {:keys [todos/title] :as props} e]
+(defn key-down [c {:keys [todo/title] :as props} e]
   (condp == (.-keyCode e)
     ESCAPE_KEY
       (do
