@@ -94,7 +94,16 @@
   (go (pprint/pprint
         (<! (util/transit-post-chan "/api"
               `[({:todos/list ~(om/get-query item/TodoItem)}
+                  {:as-of #inst "2015-09-29T03:30:42.620-00:00"})]))))
+
+  (go (reset! app-state
+        (<! (util/transit-post-chan "/api"
+              `[({:todos/list ~(om/get-query item/TodoItem)}
                   {:as-of #inst "2015-09-29T03:00:42.620-00:00"})]))))
+
+  (go (reset! app-state
+        (<! (util/transit-post-chan "/api"
+              `[({:todos/list ~(om/get-query item/TodoItem)})]))))
 
   (require '[cljs.pprint :as pprint])
 
