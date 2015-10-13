@@ -104,4 +104,4 @@
           (delete-button this props))
         (edit-field this props)))))
 
-(def item (om/create-factory TodoItem {:keyfn :db/id}))
+(def item (om/factory TodoItem {:keyfn :db/id}))

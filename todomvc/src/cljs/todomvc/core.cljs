@@ -67,12 +67,12 @@
           (main props)
           (footer props 0 0))))))
 
-(def todos (om/create-factory Todos))
+(def todos (om/factory Todos))
 
 (def reconciler
   (om/reconciler
-    {:parser  (om/parser {:read p/read :mutate p/mutate})
-     :send    (util/transit-post "/api")}))
+    {:parser (om/parser {:read p/read :mutate p/mutate})
+     :send   (util/transit-post "/api")}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
