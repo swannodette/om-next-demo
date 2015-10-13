@@ -73,6 +73,10 @@
          :onKeyDown (fn [e] (key-down c props e))}))
 
 (defui TodoItem
+  static om/Ident
+  (ident [this {:keys [db/id]}]
+    [:todos/by-id id])
+
   static om/IQuery
   (query [this]
     [:db/id :todo/editing :todo/completed :todo/title])
@@ -100,4 +104,4 @@
           (delete-button this props))
         (edit-field this props)))))
 
-(def item (om/create-factory TodoItem))
+(def item (om/create-factory TodoItem {:keyfn :db/id}))

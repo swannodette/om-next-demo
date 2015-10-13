@@ -25,11 +25,7 @@
            :onChange identity
            :checked  (every? :todo/completed list)})
     (apply dom/ul #js {:id "todo-list"}
-      (map-indexed
-        (fn [i {:keys [db/id] :as props}]
-          (item/item
-            (assoc props :react-key id :om-index i)))
-        list))))
+      (map item/item list))))
 
 (defn clear-button [completed]
   (when (pos? completed)
@@ -73,22 +69,17 @@
 
 (def todos (om/create-factory Todos))
 
-(def app-state (atom {}))
-
 (def reconciler
   (om/reconciler
-    {:state   app-state
-     :parser  (om/parser {:read p/read :mutate p/mutate})
-     :send    (util/transit-post "/api")
-     :ui->ref (fn [c]
-                (if-let [id (-> c om/props :db/id)]
-                  [:todos/by-id id]
-                  c))}))
+    {:parser  (om/parser {:read p/read :mutate p/mutate})
+     :send    (util/transit-post "/api")}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
 
 (comment
   (om/get-query Todos)
+
+  (js/setTimeout #(pprint/pprint @app-state) 5000)
 
   (go (pprint/pprint
         (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
