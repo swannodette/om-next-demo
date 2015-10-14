@@ -22,14 +22,14 @@
     false))
 
 (defn edit [c {:keys [db/id todo/title] :as props}]
-  (om/call c 'todo/edit {:db/id id})
+  (om/transact! c `[(todo/edit {:db/id ~id})])
   (om/update-state! c merge {:needs-focus true :edit-text title}))
 
 (defn key-down [c {:keys [todo/title] :as props} e]
   (condp == (.-keyCode e)
     ESCAPE_KEY
       (do
-        (om/call c 'todo/cancel-edit)
+        (om/transact! c '[(todo/cancel-edit)])
         (om/update-state! c assoc :edit-text title))
     ENTER_KEY
       (submit c props)

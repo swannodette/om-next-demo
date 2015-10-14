@@ -14,15 +14,13 @@
       {:quote true})))
 
 (defmethod read :todos/list
-  [{:keys [state indexer]} k _]
+  [{:keys [state ref]} k _]
   (let [st @state]
-    (if-let [list (get st k)]
+    (if-let [todos (into [] (map (get st :todos/by-id)) (get st k))]
       (if-let [ref (:todos/editing st)]
         ;; TRANSPARENTLY MERGE LOCAL STATE
-        {:value (update-in list
-                  (om/subpath k (om/key->any indexer ref))
-                  assoc :todo/editing true)}
-        {:value list})
+        {:value (update-in todos ref assoc :todo/editing true)}
+        {:value todos})
       {:quote true})))
 
 ;; =============================================================================
@@ -34,13 +32,12 @@
   [_ _ _] {:quote true})
 
 (defmethod mutate 'todo/update
-  [{:keys [state indexer]} _ {:keys [db/id] :as new-props}]
+  [{:keys [state ref]} _ {:keys [db/id] :as new-props}]
   {:quote true
    :action ;; OPTIMISTIC UPDATE
    (fn []
      (let [ref [:todos/by-id id]]
-       (swap! state update-in (om/key->any indexer ref)
-         merge new-props)))})
+       (swap! state update-in ref merge new-props)))})
 
 (defmethod mutate 'todo/edit
   [{:keys [state]} _ {:keys [db/id]}]

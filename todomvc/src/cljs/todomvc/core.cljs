@@ -71,7 +71,8 @@
 
 (def reconciler
   (om/reconciler
-    {:parser (om/parser {:read p/read :mutate p/mutate})
+    {:state  {}
+     :parser (om/parser {:read p/read :mutate p/mutate})
      :send   (util/transit-post "/api")}))
 
 (om/add-root! reconciler (gdom/getElement "todoapp") Todos)
