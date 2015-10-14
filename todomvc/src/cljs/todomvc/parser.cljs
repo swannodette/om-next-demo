@@ -14,7 +14,7 @@
       {:quote true})))
 
 (defmethod read :todos/list
-  [{:keys [state ref]} k _]
+  [{:keys [state]} k _]
   (let [st @state]
     (if-let [todos (into [] (map (get st :todos/by-id)) (get st k))]
       (if-let [ref (:todos/editing st)]
