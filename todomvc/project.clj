@@ -17,9 +17,7 @@
                  [cljs-http "0.1.30" :exclusions
                   [org.clojure/clojure org.clojure/clojurescript
                    com.cognitect/transit-cljs]]
-                 [com.stuartsierra/component "0.2.3"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [secretary "0.4.0" :exclusions [org.clojure/clojurescript]]]
+                 [com.stuartsierra/component "0.2.3"]]
 
   :source-paths ["src/clj" "src/cljs" "src/dev"]
   )

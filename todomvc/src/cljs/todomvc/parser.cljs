@@ -82,10 +82,3 @@
   [{:keys [state]} _ _]
   {:value [:todos/list]
    :action (fn [] (swap! state dissoc :todos/temp))})
-
-(comment
-  (require '[cljs.pprint :as pp])
-
-  (pp/pprint
-    @(om/get-indexer todomvc.core/reconciler))
-  )

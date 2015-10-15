@@ -1,11 +1,7 @@
 (ns todomvc.core
-  (:require-macros [cljs.core.async.macros :refer [go]]
-                   [secretary.macros :refer [defroute]])
   (:require [goog.events :as events]
             [goog.dom :as gdom]
             [cljs.pprint :as pprint]
-            [secretary.core :as secretary]
-            [cljs.core.async :refer [put! <! chan]]
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [todomvc.util :as util :refer [hidden pluralize]]
@@ -81,40 +77,3 @@
      :send   (util/transit-post "/api")}))
 
 (om/add-root! reconciler Todos (gdom/getElement "todoapp"))
-
-(comment
-  (om/get-query Todos)
-
-  (js/setTimeout #(pprint/pprint @app-state) 5000)
-
-  (go (pprint/pprint
-        (<! (util/transit-post-chan "/api" (om/get-query Todos)))))
-
-  (go (pprint/pprint
-        (<! (util/transit-post-chan "/api"
-              `[({:todos/list ~(om/get-query item/TodoItem)}
-                  {:as-of #inst "2015-09-29T14:27:02.270-00:00"})]))))
-
-  (go (reset! app-state
-        (<! (util/transit-post-chan "/api"
-              `[({:todos/list ~(om/get-query item/TodoItem)}
-                  {:as-of #inst "2015-09-29T14:27:02.270-00:00"})]))))
-
-  (def idxr (om/get-indexer reconciler))
-
-  (def p (om/parser {:read p/read :mutate p/mutate}))
-
-  (p {:state (get-in reconciler [:config :state])}
-     `[(todo/update
-         {:db/id 17592186045418, :todo/title "Get Apple Juice"})
-       '[:todos/by-id 17592186045418]]
-    true)
-
-  ;; The Indexer!
-
-  (pprint/pprint @idxr)
-
-  (let [c (first (om/key->components idxr
-                   [:todos/by-id 17592186045418]))]
-    (om/props c))
-  )

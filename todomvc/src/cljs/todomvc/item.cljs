@@ -53,7 +53,7 @@
                      (om/transact! c
                        `[(todo/update
                            {:db/id ~id :todo/completed ~(not completed)})
-                         [:todos/by-id ~id]]))}))
+                         '[:todos/by-id ~id]]))}))
 
 (defn label [c {:keys [todo/title] :as props}]
   (dom/label
