@@ -17,7 +17,7 @@
   [{:keys [state]} k _]
   (let [st @state]
     (if (contains? st k)
-      (let [todos (into [] (map (get st :todos/by-id)) (get st k))]
+      (let [todos (into [] (map #(get-in st %)) (get st k))]
         (if-let [ref (:todos/editing st)]
           ;; TRANSPARENTLY MERGE LOCAL STATE
           {:value (update-in todos ref assoc :todo/editing true)}
