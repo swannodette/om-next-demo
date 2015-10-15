@@ -9,7 +9,7 @@
 
 (defn submit [c {:keys [db/id todo/title] :as props}]
   (let [edit-text (string/trim (or (om/get-state c :edit-text) ""))]
-    (om/transact c
+    (om/transact! c
       (cond-> '[(todo/cancel-edit)]
         (= :temp id)
         (conj '(todos/delete-temp))
@@ -48,7 +48,7 @@
          :type "checkbox"
          :checked (and completed "checked")
          :onChange (fn [_]
-                     (om/transact c
+                     (om/transact! c
                        `[(todo/update
                            {:db/id ~id :todo/completed ~(not completed)})
                          [:todos/by-id ~id]]))}))
@@ -61,7 +61,7 @@
 (defn delete-button [c {:keys [db/id]}]
   (dom/button
     #js {:className "destroy"
-         :onClick (fn [_] (om/call c 'todo/delete {:db/id id}))}))
+         :onClick (fn [_] (om/transact! c `[(todo/delete {:db/id ~id})]))}))
 
 (defn edit-field [c props]
   (dom/input
