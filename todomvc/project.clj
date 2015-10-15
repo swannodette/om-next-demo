@@ -7,7 +7,7 @@
   :jvm-opts ^:replace ["-Xms512m" "-Xmx512m" "-server"]
 
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.145" :classifier "aot"]
+                 [org.clojure/clojurescript "1.7.145"]
                  [com.datomic/datomic-free "0.9.5206"]
                  [bidi "1.20.3"]
                  [org.omcljs/om "1.0.0-alpha2-SNAPSHOT"]
