@@ -36,9 +36,10 @@
 (defmethod mutate 'todo/update
   [{:keys [state ref]} _ new-props]
   {:remote true
-   :action ;; OPTIMISTIC UPDATE
-   (fn []
-     (swap! state update-in ref merge new-props))})
+   ;:action ;; OPTIMISTIC UPDATE
+   ;(fn []
+   ;  (swap! state update-in ref merge new-props))
+   })
 
 (defmethod mutate 'todo/edit
   [{:keys [state]} _ {:keys [db/id]}]
