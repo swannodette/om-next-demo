@@ -75,7 +75,7 @@
      :parser (om/parser {:read p/read :mutate p/mutate})
      :send   (util/transit-post "/api")}))
 
-(om/add-root! reconciler (gdom/getElement "todoapp") Todos)
+(om/add-root! reconciler Todos (gdom/getElement "todoapp"))
 
 (comment
   (om/get-query Todos)
