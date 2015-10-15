@@ -38,7 +38,7 @@
   {:action
    (fn []
      (let [st @state]
-       (swap! state update [:todos/list]
+       (swap! state update-in [:todos/list]
          (fn [list]
            (remove #(get-in st (conj % :todo/completed))
              list)))))})
