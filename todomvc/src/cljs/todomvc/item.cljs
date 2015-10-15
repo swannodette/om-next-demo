@@ -47,13 +47,13 @@
 (defn checkbox [c {:keys [:db/id :todo/completed]}]
   (dom/input
     #js {:className "toggle"
-         :type "checkbox"
-         :checked (and completed "checked")
-         :onChange (fn [_]
-                     (om/transact! c
-                       `[(todo/update
-                           {:db/id ~id :todo/completed ~(not completed)})
-                         '[:todos/by-id ~id]]))}))
+         :type      "checkbox"
+         :checked   (and completed "checked")
+         :onChange  (fn [_]
+                      (om/transact! c
+                        `[(todo/update
+                            {:db/id ~id :todo/completed ~(not completed)})
+                          '[:todos/by-id ~id]]))}))
 
 (defn label [c {:keys [todo/title] :as props}]
   (dom/label
@@ -70,9 +70,9 @@
     #js {:ref       "editField"
          :className "edit"
          :value     (om/get-state c :edit-text)
-         :onBlur    (fn [e] (submit c props e))
-         :onChange  (fn [e] (change c e))
-         :onKeyDown (fn [e] (key-down c props e))}))
+         :onBlur    #(submit c props %)
+         :onChange  #(change c %)
+         :onKeyDown #(key-down c props %)}))
 
 (defui TodoItem
   static om/Ident
