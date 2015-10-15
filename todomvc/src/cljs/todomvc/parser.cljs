@@ -33,6 +33,16 @@
 (defmethod mutate :default
   [_ _ _] {:remote true})
 
+(defmethod mutate 'todos/clear
+  [{:keys [state]} _ _]
+  {:action
+   (fn []
+     (let [st @state]
+       (swap! state update [:todos/list]
+         (fn [list]
+           (remove #(get-in st (conj % :todo/completed))
+             list)))))})
+
 (defmethod mutate 'todo/update
   [{:keys [state ref]} _ new-props]
   {:remote true
