@@ -11,17 +11,18 @@
   (let [st @state] ;; CACHING!!!
     (if (contains? st k)
       {:value (get st k)}
-      {:quote true})))
+      {:remote true})))
 
 (defmethod read :todos/list
   [{:keys [state]} k _]
   (let [st @state]
-    (if-let [todos (into [] (map (get st :todos/by-id)) (get st k))]
-      (if-let [ref (:todos/editing st)]
-        ;; TRANSPARENTLY MERGE LOCAL STATE
-        {:value (update-in todos ref assoc :todo/editing true)}
-        {:value todos})
-      {:quote true})))
+    (if (contains? st k)
+      (let [todos (into [] (map (get st :todos/by-id)) (get st k))]
+        (if-let [ref (:todos/editing st)]
+          ;; TRANSPARENTLY MERGE LOCAL STATE
+          {:value (update-in todos ref assoc :todo/editing true)}
+          {:value todos}))
+      {:remote true})))
 
 ;; =============================================================================
 ;; Mutations
@@ -29,11 +30,11 @@
 (defmulti mutate om/dispatch)
 
 (defmethod mutate :default
-  [_ _ _] {:quote true})
+  [_ _ _] {:remote true})
 
 (defmethod mutate 'todo/update
   [{:keys [state ref]} _ new-props]
-  {:quote true
+  {:remote true
    :action ;; OPTIMISTIC UPDATE
    (fn []
      (swap! state update-in ref merge new-props))})
