@@ -14,16 +14,19 @@
 ;; Components
 
 (defn main [todos {:keys [todos/list] :as props}]
-  (dom/section #js {:id "main" :style (hidden (empty? list))}
-    (dom/input
-      #js {:id       "toggle-all"
-           :type     "checkbox"
-           :onChange (fn [_]
-                       (om/transact! todos
-                         `[(todos/complete-all)]))
-           :checked  (every? :todo/completed list)})
-    (apply dom/ul #js {:id "todo-list"}
-      (map item/item list))))
+  (let [checked? (every? :todo/completed list)]
+    (dom/section #js {:id "main" :style (hidden (empty? list))}
+     (dom/input
+       #js {:id       "toggle-all"
+            :type     "checkbox"
+            :onChange (fn [_]
+                        (om/transact! todos
+                          `[(todos/toggle-all
+                              {:value ~(not checked?)})
+                            :todos/list]))
+            :checked  checked?})
+     (apply dom/ul #js {:id "todo-list"}
+       (map item/item list)))))
 
 (defn clear-button [todos completed]
   (when (pos? completed)
