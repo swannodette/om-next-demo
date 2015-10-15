@@ -40,8 +40,18 @@
      (let [st @state]
        (swap! state update-in [:todos/list]
          (fn [list]
-           (remove #(get-in st (conj % :todo/completed))
-             list)))))})
+           (into []
+             (remove #(get-in st (conj % :todo/completed))))))))})
+
+(defmethod mutate 'todos/complete-all
+  [{:keys [state]} _ _]
+  {:action
+   (fn []
+     (letfn [(step [state' ref]
+               (update-in state' ref assoc
+                 :todo/completed true))]
+       (swap! state
+         #(reduce step % (:todos/list %)))))})
 
 (defmethod mutate 'todo/update
   [{:keys [state ref]} _ new-props]

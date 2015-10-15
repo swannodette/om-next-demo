@@ -17,12 +17,14 @@
 ;; -----------------------------------------------------------------------------
 ;; Components
 
-(defn main [{:keys [todos/list] :as app}]
+(defn main [todos {:keys [todos/list] :as props}]
   (dom/section #js {:id "main" :style (hidden (empty? list))}
     (dom/input
       #js {:id       "toggle-all"
            :type     "checkbox"
-           :onChange identity
+           :onChange (fn [_]
+                       (om/transact! todos
+                         `[(todos/complete-all)]))
            :checked  (every? :todo/completed list)})
     (apply dom/ul #js {:id "todo-list"}
       (map item/item list))))
@@ -67,7 +69,7 @@
                  :id "new-todo"
                  :placeholder "What needs to be done?"
                  :onKeyDown #(do %)})
-          (main props)
+          (main this props)
           (footer this props active completed))))))
 
 (def todos (om/factory Todos))
