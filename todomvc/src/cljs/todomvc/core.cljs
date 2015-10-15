@@ -97,6 +97,13 @@
 
   (def idxr (om/get-indexer reconciler))
 
+  (def p (om/parser {:read p/read :mutate p/mutate}))
+
+  (p {:state (get-in reconciler [:config :state])}
+     `[(todo/update
+         {:db/id 17592186045418, :todo/title "Get Apple Juice"})
+       [:todos/by-id 17592186045418]])
+
   ;; The Indexer!
 
   (pprint/pprint @idxr)
