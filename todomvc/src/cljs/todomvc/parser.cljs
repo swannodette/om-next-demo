@@ -13,15 +13,16 @@
       {:value (get st k)}
       {:remote true})))
 
+(defn get-todos [{:keys [todos/editing] :as st}]
+  (let [f #(cond-> (get-in st %)
+            (= editing %) (assoc :todo/editing true))]
+    (into [] (map f) (get st :todos/list))))
+
 (defmethod read :todos/list
   [{:keys [state]} k _]
   (let [st @state]
     (if (contains? st k)
-      (let [todos (into [] (map #(get-in st %)) (get st k))]
-        (if-let [ref (:todos/editing st)]
-          ;; TRANSPARENTLY MERGE LOCAL STATE
-          {:value (update-in todos ref assoc :todo/editing true)}
-          {:value todos}))
+      {:value (get-todos st)}
       {:remote true})))
 
 ;; =============================================================================
