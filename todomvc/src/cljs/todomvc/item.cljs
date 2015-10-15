@@ -19,7 +19,7 @@
             (not= edit-text title))
           (into
             `[(todo/update {:db/id ~id :todo/title ~edit-text})
-              [:todos/by-id ~id]]))))
+              '[:todos/by-id ~id]]))))
     (doto e (.preventDefault) (.stopPropagation))))
 
 (defn edit [c {:keys [db/id todo/title] :as props}]

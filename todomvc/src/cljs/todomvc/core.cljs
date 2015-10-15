@@ -102,7 +102,8 @@
   (p {:state (get-in reconciler [:config :state])}
      `[(todo/update
          {:db/id 17592186045418, :todo/title "Get Apple Juice"})
-       [:todos/by-id 17592186045418]])
+       '[:todos/by-id 17592186045418]]
+    true)
 
   ;; The Indexer!
 
