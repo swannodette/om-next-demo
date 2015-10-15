@@ -9,19 +9,18 @@
 
 (defn submit [c {:keys [db/id todo/title] :as props} e]
   (let [edit-text (string/trim (or (om/get-state c :edit-text) ""))]
-    (om/transact! c
-      (cond-> '[(todo/cancel-edit)]
-        (= :temp id)
-        (conj '(todos/delete-temp))
+    (when-not (= edit-text title)
+      (om/transact! c
+       (cond-> '[(todo/cancel-edit)]
+         (= :temp id)
+         (conj '(todos/delete-temp))
 
-        (and (not (string/blank? edit-text))
-             (not= edit-text title))
-        (into
-          `[(todo/update {:db/id ~id :todo/title ~edit-text})
-            [:todos/by-id ~id]])))
-    (doto e
-      (.stopPropagation)
-      (.preventDefault))))
+         (and (not (string/blank? edit-text))
+           (not= edit-text title))
+         (into
+           `[(todo/update {:db/id ~id :todo/title ~edit-text})
+             [:todos/by-id ~id]]))))
+    (doto e (.preventDefault) (.stopPropagation))))
 
 (defn edit [c {:keys [db/id todo/title] :as props}]
   (om/transact! c `[(todo/edit {:db/id ~id})])
@@ -32,7 +31,8 @@
     ESCAPE_KEY
       (do
         (om/transact! c '[(todo/cancel-edit)])
-        (om/update-state! c assoc :edit-text title))
+        (om/update-state! c assoc :edit-text title)
+        (doto e (.preventDefault) (.stopPropagation)))
     ENTER_KEY
       (submit c props e)
     nil))
