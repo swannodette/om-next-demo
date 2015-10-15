@@ -27,22 +27,22 @@
     (apply dom/ul #js {:id "todo-list"}
       (map item/item list))))
 
-(defn clear-button [completed]
+(defn clear-button [todos completed]
   (when (pos? completed)
     (dom/button
       #js {:id "clear-completed"
-           :onClick #(do %)}
+           :onClick (fn [_] (om/transact! todos `[(todos/clear)]))}
       (str "Clear completed (" completed ")"))))
 
-(defn footer [app active completed]
-  (dom/footer #js {:id "footer" :style (hidden (empty? (:todos/list app)))}
+(defn footer [todos props active completed]
+  (dom/footer #js {:id "footer" :style (hidden (empty? (:todos/list props)))}
     (dom/span #js {:id "todo-count"}
       (dom/strong nil active)
       (str " " (pluralize active "item") " left"))
-    (apply dom/ul #js {:id "filters" :className (name (:todos/showing app))}
+    (apply dom/ul #js {:id "filters" :className (name (:todos/showing props))}
       (map (fn [[x y]] (dom/li nil (dom/a #js {:href (str "#/" x)} y)))
         [["" "All"] ["active" "Active"] ["completed" "Completed"]]))
-    (clear-button completed)))
+    (clear-button todos completed)))
 
 (defui Todos
   static om/IQueryParams
@@ -68,7 +68,7 @@
                  :placeholder "What needs to be done?"
                  :onKeyDown #(do %)})
           (main props)
-          (footer props active completed))))))
+          (footer this props active completed))))))
 
 (def todos (om/factory Todos))
 
