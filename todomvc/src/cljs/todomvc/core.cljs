@@ -34,11 +34,11 @@
            :onClick #(do %)}
       (str "Clear completed (" completed ")"))))
 
-(defn footer [app count completed]
+(defn footer [app active completed]
   (dom/footer #js {:id "footer" :style (hidden (empty? (:todos/list app)))}
     (dom/span #js {:id "todo-count"}
-      (dom/strong nil count)
-      (str " " (pluralize count "item") " left"))
+      (dom/strong nil active)
+      (str " " (pluralize active "item") " left"))
     (apply dom/ul #js {:id "filters" :className (name (:todos/showing app))}
       (map (fn [[x y]] (dom/li nil (dom/a #js {:href (str "#/" x)} y)))
         [["" "All"] ["active" "Active"] ["completed" "Completed"]]))
@@ -55,7 +55,10 @@
 
   Object
   (render [this]
-    (let [props (merge (om/props this) {:todos/showing :all})]
+    (let [props (merge (om/props this) {:todos/showing :all})
+          {:keys [todos/list]} props
+          active (count (remove :todo/completed list))
+          completed (- (count list) active)]
       (dom/div nil
         (dom/header #js {:id "header"}
           (dom/h1 nil "todos")
@@ -65,7 +68,7 @@
                  :placeholder "What needs to be done?"
                  :onKeyDown #(do %)})
           (main props)
-          (footer props 0 0))))))
+          (footer props active completed))))))
 
 (def todos (om/factory Todos))
 
