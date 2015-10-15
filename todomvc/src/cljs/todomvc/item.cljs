@@ -7,7 +7,7 @@
 (def ESCAPE_KEY 27)
 (def ENTER_KEY 13)
 
-(defn submit [c {:keys [db/id todo/title] :as props}]
+(defn submit [c {:keys [db/id todo/title] :as props} e]
   (let [edit-text (string/trim (or (om/get-state c :edit-text) ""))]
     (om/transact! c
       (cond-> '[(todo/cancel-edit)]
@@ -19,7 +19,9 @@
         (into
           `[(todo/update {:db/id ~id :todo/title ~edit-text})
             [:todos/by-id ~id]])))
-    false))
+    (doto e
+      (.stopPropagation)
+      (.preventDefault))))
 
 (defn edit [c {:keys [db/id todo/title] :as props}]
   (om/transact! c `[(todo/edit {:db/id ~id})])
@@ -32,7 +34,7 @@
         (om/transact! c '[(todo/cancel-edit)])
         (om/update-state! c assoc :edit-text title))
     ENTER_KEY
-      (submit c props)
+      (submit c props e)
     nil))
 
 (defn change [c e]
@@ -68,7 +70,7 @@
     #js {:ref       "editField"
          :className "edit"
          :value     (om/get-state c :edit-text)
-         :onBlur    (fn [_] (submit c props))
+         :onBlur    (fn [e] (submit c props e))
          :onChange  (fn [e] (change c e))
          :onKeyDown (fn [e] (key-down c props e))}))
 
