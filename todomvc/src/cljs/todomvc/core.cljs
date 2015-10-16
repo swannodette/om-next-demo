@@ -1,7 +1,6 @@
 (ns todomvc.core
   (:require [goog.events :as events]
             [goog.dom :as gdom]
-            [cljs.pprint :as pprint]
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [todomvc.util :as util :refer [hidden pluralize]]
@@ -75,8 +74,9 @@
 
 (def reconciler
   (om/reconciler
-    {:state  {}
-     :parser (om/parser {:read p/read :mutate p/mutate})
-     :send   (util/transit-post "/api")}))
+    {:state     (atom {})
+     :normalize true
+     :parser    (om/parser {:read p/read :mutate p/mutate})
+     :send      (util/transit-post "/api")}))
 
 (om/add-root! reconciler Todos (gdom/getElement "todoapp"))
