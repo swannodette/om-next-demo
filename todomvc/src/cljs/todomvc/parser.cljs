@@ -13,10 +13,14 @@
       {:value (get st k)}
       {:remote true})))
 
+;; work around for a bizarre :simple/:advanced bug
+;; circle back - David
+(defn join [st editing ref]
+  (cond-> (get-in st ref)
+    (= editing ref) (assoc :todo/editing true)))
+
 (defn get-todos [{:keys [todos/editing] :as st}]
-  (let [f #(cond-> (get-in st %)
-            (= editing %) (assoc :todo/editing true))]
-    (into [] (map f) (get st :todos/list))))
+  (into [] (map #(join st editing %)) (get st :todos/list)))
 
 (defmethod read :todos/list
   [{:keys [state]} k _]
