@@ -3,7 +3,7 @@
 (b/build "src/cljs"
   {:output-to     "resources/public/js/app.js"
    :output-dir    "resources/public/js"
-   :optimizations :advanced
+   :optimizations :simple
    :externs       ["src/js/externs.js"]
    :pretty-print  true
    :pseudo-names  true
