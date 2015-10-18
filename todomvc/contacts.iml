@@ -29,7 +29,7 @@
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.7.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.7.145" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.6" level="project" />
-    <orderEntry type="library" name="Leiningen: org.omcljs/om:1.0.0-alpha3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Leiningen: org.omcljs/om:1.0.0-alpha3" level="project" />
     <orderEntry type="library" name="Leiningen: ring:1.4.0" level="project" />
     <orderEntry type="library" name="Leiningen: com.cemerick/url:0.1.1" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:0.4.3" level="project" />
