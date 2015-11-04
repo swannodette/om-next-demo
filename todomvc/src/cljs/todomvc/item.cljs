@@ -87,7 +87,7 @@
   (componentDidUpdate [this prev-props prev-state]
     (when (and (:todo/editing (om/props this))
                (om/get-state this :needs-focus))
-      (let [node (om/dom-node this "editField")
+      (let [node (dom/node this "editField")
             len  (.. node -value -length)]
         (.focus node)
         (.setSelectionRange node len len))

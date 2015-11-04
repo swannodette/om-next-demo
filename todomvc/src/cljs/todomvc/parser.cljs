@@ -15,12 +15,12 @@
 
 ;; work around for a bizarre :simple/:advanced bug
 ;; circle back - David
-(defn join [st editing ref]
+(defn join [st ref]
   (cond-> (get-in st ref)
-    (= editing ref) (assoc :todo/editing true)))
+    (= (:todos/editing st) ref) (assoc :todo/editing true)))
 
-(defn get-todos [{:keys [todos/editing] :as st}]
-  (into [] (map #(join st editing %)) (get st :todos/list)))
+(defn get-todos [st]
+  (into [] (map #(join st %)) (get st :todos/list)))
 
 (defmethod read :todos/list
   [{:keys [state]} k _]
