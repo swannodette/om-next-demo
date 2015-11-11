@@ -11,6 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.repl-1.7.169" />
+      <excludeFolder url="file://$MODULE_DIR$/.repl-1.7.170" />
       <excludeFolder url="file://$MODULE_DIR$/resources/public/js" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
@@ -19,7 +20,6 @@
     <orderEntry type="library" name="Leiningen: bidi:1.20.3" level="project" />
     <orderEntry type="library" name="Leiningen: clj-stacktrace:0.2.8" level="project" />
     <orderEntry type="library" name="Leiningen: clj-time:0.6.0" level="project" />
-    <orderEntry type="library" name="Leiningen: cljs-http:0.1.30" level="project" />
     <orderEntry type="library" name="Leiningen: cljsjs/react-dom:0.14.0-0" level="project" />
     <orderEntry type="library" name="Leiningen: cljsjs/react:0.14.0-0" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.3" level="project" />
@@ -100,23 +100,16 @@
     <orderEntry type="library" name="Leiningen: io.netty/netty:3.6.7.Final" level="project" />
     <orderEntry type="library" name="Leiningen: javax.servlet/javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: joda-time:2.9" level="project" />
-    <orderEntry type="library" name="Leiningen: noencore:0.1.19" level="project" />
     <orderEntry type="library" name="Leiningen: ns-tracker:0.3.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.apache.directory.studio/org.apache.commons.codec:1.8" level="project" />
     <orderEntry type="library" name="Leiningen: org.apache.tomcat/tomcat-jdbc:7.0.27" level="project" />
     <orderEntry type="library" name="Leiningen: org.apache.tomcat/tomcat-juli:7.0.27" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.7.0" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.7.169" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/core.async:0.1.346.0-17112a-alpha" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/core.cache:0.6.3" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/core.memoize:0.5.6" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/clojurescript:1.7.170" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/data.json:0.2.6" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/data.priority-map:0.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library-third-party:0.0-20151016-61277aea" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/google-closure-library:0.0-20151016-61277aea" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/java.classpath:0.2.2" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer.jvm:0.1.0-beta12" level="project" />
-    <orderEntry type="library" name="Leiningen: org.clojure/tools.analyzer:0.1.0-beta12" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.cli:0.2.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.namespace:0.2.10" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.10" level="project" />
@@ -139,7 +132,6 @@
     <orderEntry type="library" name="Leiningen: org.mozilla/rhino:1.7R5" level="project" />
     <orderEntry type="library" name="Leiningen: org.msgpack/msgpack:0.6.10" level="project" />
     <orderEntry type="library" name="Leiningen: org.omcljs/om:1.0.0-alpha20-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Leiningen: org.ow2.asm/asm-all:4.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.slf4j/jcl-over-slf4j:1.7.7" level="project" />
     <orderEntry type="library" name="Leiningen: org.slf4j/jul-to-slf4j:1.7.7" level="project" />
     <orderEntry type="library" name="Leiningen: org.slf4j/log4j-over-slf4j:1.7.7" level="project" />
