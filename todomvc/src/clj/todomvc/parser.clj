@@ -29,12 +29,12 @@
      (d/q q db (or selector '[*])))))
 
 (defmethod readf :todos/by-id
-  [{:keys [conn selector]} _ {:keys [id]}]
-  {:value (d/pull @(d/sync conn) (or selector '[*]) id)})
+  [{:keys [conn query]} _ {:keys [id]}]
+  {:value (d/pull @(d/sync conn) (or query '[*]) id)})
 
 (defmethod readf :todos/list
-  [{:keys [conn selector]} _ params]
-  {:value (todos (d/db conn) selector params)})
+  [{:keys [conn query]} _ params]
+  {:value (todos (d/db conn) query params)})
 
 ;; =============================================================================
 ;; Mutations
