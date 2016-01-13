@@ -1,4 +1,7 @@
 .idea
 todomvc/target
 todomvc/resources/public/js
+todomvc/.lein*
+todomvc/.nrepl*
+todomvc/figwheel_server.log
 .repl*
