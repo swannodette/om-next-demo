@@ -47,7 +47,7 @@
 
 (defmethod mutatef 'todos/create
   [{:keys [conn]} k {:keys [:todo/title]}]
-  {:value [:todos/list]
+  {:value {:keys [:todos/list]}
    :action
    (fn []
      @(d/transact conn
@@ -58,7 +58,7 @@
 
 (defmethod mutatef 'todo/update
   [{:keys [conn]} k {:keys [db/id todo/completed todo/title]}]
-  {:value [[:todos/by-id id]]
+  {:value {:keys [[:todos/by-id id]]}
    :action
    (fn []
      @(d/transact conn
@@ -70,7 +70,7 @@
 
 (defmethod mutatef 'todo/delete
   [{:keys [conn]} k {:keys [db/id]}]
-  {:value [:todos/list]
+  {:value {:keys [:todos/list]}
    :action
    (fn []
      @(d/transact conn [[:db.fn/retractEntity id]]))})
