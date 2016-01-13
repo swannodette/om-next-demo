@@ -16,6 +16,7 @@
                  [com.cognitect/transit-cljs "0.8.237"]
                  [com.stuartsierra/component "0.3.1"]
 
+                 [figwheel-sidecar "0.5.0-2" :scope "test"]]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :source-paths ["src/clj" "src/cljs" "src/dev"]
   )
