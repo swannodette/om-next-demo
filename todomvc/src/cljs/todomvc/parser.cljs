@@ -45,7 +45,8 @@
        (swap! state update-in [:todos/list]
          (fn [list]
            (into []
-             (remove #(get-in st (conj % :todo/completed))))))))})
+             (remove #(get-in st (conj % :todo/completed)))
+             list)))))})
 
 (defmethod mutate 'todos/toggle-all
   [{:keys [state]} _ {:keys [value]}]
