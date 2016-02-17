@@ -1,5 +1,6 @@
 (ns todomvc.server
   (:require [clojure.java.io :as io]
+            [clojure.walk :as walk]
             [todomvc.util :as util]
             [ring.util.response :refer [response file-response resource-response]]
             [ring.adapter.jetty :refer [run-jetty]]
@@ -36,9 +37,14 @@
    :body    data})
 
 (defn api [req]
-  (generate-response
-    ((om/parser {:read parser/readf :mutate parser/mutatef})
-      {:conn (:datomic-connection req)} (:transit-params req))))
+  (let [data ((om/parser {:read parser/readf :mutate parser/mutatef})
+                {:conn (:datomic-connection req)} (:transit-params req))
+        data' (walk/postwalk (fn [x]
+                               (if (and (sequential? x) (= :result (first x)))
+                                 [(first x) (dissoc (second x) :db-before :db-after :tx-data)]
+                                 x))
+                data)]
+    (generate-response data')))
 
 ;;;; PRIMARY HANDLER
 
@@ -116,4 +122,3 @@
   {:todo/count 5
    'todo/create {:error "Not logged in"}}
   )
-
