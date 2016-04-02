@@ -16,7 +16,7 @@ Head on to http://localhost:8081/ to see the running application.
 ## Dev
 
     cd todomvc
-    lein trampoline run -m clojure.main script/figwheel.clj --repl
+    lein trampoline run -m clojure.main --init script/figwheel.clj --repl
     (start)
     (repl)
 
