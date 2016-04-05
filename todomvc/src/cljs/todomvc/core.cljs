@@ -44,6 +44,20 @@
         [["" "All"] ["active" "Active"] ["completed" "Completed"]]))
     (clear-button todos completed)))
 
+(defn key-down [c _ e]
+  (condp == (.-keyCode e)
+    item/ESCAPE_KEY
+    (do
+      (om/update-state! c assoc :edit-text "")
+      (doto e (.preventDefault) (.stopPropagation)))
+    item/ENTER_KEY
+    (do
+      (om/transact! c `[(todos/create {:todo/title ~(om/get-state c :edit-text)})
+                        :todos/list])
+      (om/update-state! c assoc :edit-text "")
+      (doto e (.preventDefault) (.stopPropagation)))
+    nil))
+
 (defui Todos
   static om/IQueryParams
   (params [this]
@@ -65,8 +79,10 @@
           (dom/input
             #js {:ref "newField"
                  :id "new-todo"
+                 :value (om/get-state this :edit-text)
                  :placeholder "What needs to be done?"
-                 :onKeyDown #(do %)})
+                 :onChange #(item/change this %)
+                 :onKeyDown #(key-down this props %)})
           (main this props)
           (footer this props active completed))))))
 

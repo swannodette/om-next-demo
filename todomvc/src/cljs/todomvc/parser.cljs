@@ -25,9 +25,8 @@
 (defmethod read :todos/list
   [{:keys [state]} k _]
   (let [st @state]
-    (if (contains? st k)
-      {:value (get-todos st)}
-      {:remote true})))
+    {:remote true
+     :value (get-todos st)}))
 
 ;; =============================================================================
 ;; Mutations
